@@ -1,0 +1,14 @@
+version: "3.5"
+services:
+  omnidb:
+    image: taivokasper/omnidb
+    container_name: omnidb
+    ports:
+      - 25482:25482
+      - 8080:8080
+    networks:
+      - lightweight_network
+
+networks:
+  lightweight_network:
+    name: lightweight-network

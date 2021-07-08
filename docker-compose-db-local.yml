@@ -1,0 +1,20 @@
+version: "3.5"
+services:
+  mysql:
+    image: mysql:8.0.20
+    container_name: mysql-template
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_greeting
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_pw
+    ports:
+      - "3306:3306"
+    networks:
+      - lightweight_network
+
+networks:
+  lightweight_network:
+    name: lightweight-network

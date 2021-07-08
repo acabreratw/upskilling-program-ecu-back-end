@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  dbm_template:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: dbm-template
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - lightweight_network
+
+networks:
+  lightweight_network:
+    name: lightweight-network

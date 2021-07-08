@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-records-into-user-course-table
+      author: All
+      changes:
+        - sqlFile:
+            path: db/migrations/3-insert-records-into-user-course-table.sql

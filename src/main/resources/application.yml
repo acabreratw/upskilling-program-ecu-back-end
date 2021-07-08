@@ -1,0 +1,84 @@
+spring:
+  profiles:
+    active: local
+server:
+  port: 3000
+
+---
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driverClassName: com.mysql.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    platform: mysql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+  auth0:
+    audience: ${AUTH0_AUDIENCE}
+    issuer-uri: ${AUTH0_ISSUER_URI}
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    platform: mysql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+  auth0:
+    audience: ${AUTH0_AUDIENCE}
+    issuer-uri: ${AUTH0_ISSUER_URI}
+---
+spring:
+  profiles: integration
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driverClassName: com.mysql.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    platform: mysql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+  auth0:
+    audience: ${AUTH0_AUDIENCE}
+    issuer-uri: ${AUTH0_ISSUER_URI}
+
+---
+spring:
+  profiles: staging
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    driverClassName: com.mysql.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    platform: mysql
+    initialization-mode: always
+    initialize: true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    dialect: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: none
+  auth0:
+    audience: ${AUTH0_AUDIENCE}
+    issuer-uri: ${AUTH0_ISSUER_URI}

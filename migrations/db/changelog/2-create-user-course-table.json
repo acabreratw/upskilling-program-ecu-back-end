@@ -1,0 +1,29 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "create-user-course-table",
+        "author": "All",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "user_course",
+              "columns": [
+                { "column": { "name": "id", "type": "INTEGER", "autoIncrement": "true",
+                  "constraints": { "nullable": false, "primaryKey": true } } },
+                { "column": { "name": "status", "type": "varchar(3)", "constraints": { "nullable": false } } },
+                { "column": { "name": "id_course", "type": "integer", "constraints": { "nullable": false } } },
+                { "column": { "name": "user_email", "type": "varchar(300)", "constraints": { "nullable": false } } }
+              ]
+            }
+          },
+          {
+            "addForeignKeyConstraint": {  "baseColumnNames":  "id_course",  "baseTableName":  "user_course",
+                                          "constraintName": "fk_usercourse_course", "referencedColumnNames":  "id",
+                                          "referencedTableName":  "course"}
+          }
+        ]
+      }
+    }
+  ]
+}

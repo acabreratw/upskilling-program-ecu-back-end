@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "b33e6883-3107-4df7-8201-57055fd3ed2a",
+		"name": "LPE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/api/v1/course/1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndmVHBELTBBQll2NlA3MDg2dVhHciJ9.eyJpc3MiOiJodHRwczovL2Rldi15cndtdnpvMC51cy5hdXRoMC5jb20vIiwic3ViIjoiSDNYNTFhYjlTSjQ1aWN5UmVFdGEwbFZINzB6aTRHdzBAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbHBlLmludGVncmF0aW9uLmNvbSIsImlhdCI6MTU5NjIxNTgxOCwiZXhwIjoxNTk2MzAyMjE4LCJhenAiOiJIM1g1MWFiOVNKNDVpY3lSZUV0YTBsVkg3MHppNEd3MCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.tCd4oO_JT1moE54VD2WI7IOpP_KIVHwzEpQfuPH6AVg-iIQz4UVeE9XNIDsDU8J5NMtQP7vgqwXrDpMkauIZeZ6MNPea-0pmk7zc8Qg2xfXr4UPosqls19epfPsRAtJOmr64eWD6BDCF9GoSI5pdCNfgu3lvbhHcyWxaGyCdBIA3opmYRWKUoyu6c_q1RL7K-cr4pL5gVKiMyaSrynNGTZ7U6qGAN614QWw4gJKGnPmvPygnC-1anqaSXMtPbnATmPQ0rs1jLWC3e_6rc665Gu0z7dNsGPiSfow6vyZW8tRIxhs_rqFy8YVfQDIQIMzk26Z4FG4Og1le6uDHi_TdKg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/course/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"course",
+						"1"
+					]
+				},
+				"description": "Course details"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/v1/course/all/getabstract@mail.com/0/10",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndmVHBELTBBQll2NlA3MDg2dVhHciJ9.eyJpc3MiOiJodHRwczovL2Rldi15cndtdnpvMC51cy5hdXRoMC5jb20vIiwic3ViIjoiSDNYNTFhYjlTSjQ1aWN5UmVFdGEwbFZINzB6aTRHdzBAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbHBlLmludGVncmF0aW9uLmNvbSIsImlhdCI6MTU5NjIxNTgxOCwiZXhwIjoxNTk2MzAyMjE4LCJhenAiOiJIM1g1MWFiOVNKNDVpY3lSZUV0YTBsVkg3MHppNEd3MCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.tCd4oO_JT1moE54VD2WI7IOpP_KIVHwzEpQfuPH6AVg-iIQz4UVeE9XNIDsDU8J5NMtQP7vgqwXrDpMkauIZeZ6MNPea-0pmk7zc8Qg2xfXr4UPosqls19epfPsRAtJOmr64eWD6BDCF9GoSI5pdCNfgu3lvbhHcyWxaGyCdBIA3opmYRWKUoyu6c_q1RL7K-cr4pL5gVKiMyaSrynNGTZ7U6qGAN614QWw4gJKGnPmvPygnC-1anqaSXMtPbnATmPQ0rs1jLWC3e_6rc665Gu0z7dNsGPiSfow6vyZW8tRIxhs_rqFy8YVfQDIQIMzk26Z4FG4Og1le6uDHi_TdKg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/course/all/getabstract@mail.com/0/10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"course",
+						"all",
+						"getabstract@mail.com",
+						"0",
+						"10"
+					]
+				},
+				"description": "Opened courses"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/users/sign-up",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"user@mail.com\",\n    \"password\": \"pass\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/sign-up",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"sign-up"
+					]
+				},
+				"description": "User sign up"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

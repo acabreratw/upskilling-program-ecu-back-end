@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  dbm_template:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: dbm-template
+    environment:
+      DB_HOST: mysql-template
+      DB_PORT: 3306
+      DB_NAME: db_greeting
+      DB_USERNAME: mysql_user
+      DB_PASSWORD: mysql_pw
+    networks:
+      - lightweight_network
+
+networks:
+  lightweight_network:
+    name: lightweight-network
