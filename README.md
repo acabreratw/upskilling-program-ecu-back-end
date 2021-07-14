@@ -37,9 +37,9 @@ you need to have in consideration some things:
   
 >  `export DB_PASSWORD=mysql_pw`
   
->  `export AUTH0_AUDIENCE=https://get-abstract-be/`
+>  `export AUTH0_AUDIENCE=https://dev-beach-upskilling.us.auth0.com/api/v2/`
   
->  `export AUTH0_ISSUER_URI=https://dev-91pi1nba.us.auth0.com/
+>  `export AUTH0_ISSUER_URI=https://dev-beach-upskilling.us.auth0.com/`
 
 * run the database locally:
 > `docker-compose -f docker-compose-db-local.yml up 
