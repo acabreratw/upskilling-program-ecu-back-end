@@ -1,28 +1,6 @@
 # back-end-template
 ## Getting Started
 
-## Available Scripts
-
-### `make run`
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-### `make test`
-similar to 
-### `./gradlew test`
-Runs unit tests and store html test results in ./build/reports/tests/test,
-xml test results are available in ./build/test-results/tests for pipeline reporting
-
-### `make it`
-Runs integration tests
-
-### `make coverage`
-Gets coverage report for tests, html results are stored in ./build/reports/jacoco/test/html
-
-### `./gradlew check -Pstrict-security`
-Gets dependency vulnerability report in the console and the detailed html 
-in ./build/reports/dependency-check-report.html 
-
 ## Run Application Locally
 you need to have in consideration some things:
 * set up the local environment variables :
@@ -55,6 +33,28 @@ you need to have in consideration some things:
 
 Note: you can reach the application in :
  > ` http://localhost:3000/api/v1/<resource>`
+
+## Available Scripts
+
+### `make run`
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+### `make test`
+similar to 
+### `./gradlew test`
+Runs unit tests and store html test results in ./build/reports/tests/test,
+xml test results are available in ./build/test-results/tests for pipeline reporting
+
+### `make it`
+Runs integration tests
+
+### `make coverage`
+Gets coverage report for tests, html results are stored in ./build/reports/jacoco/test/html
+
+### `./gradlew check -Pstrict-security`
+Gets dependency vulnerability report in the console and the detailed html 
+in ./build/reports/dependency-check-report.html 
 
 ### Reference Documentation
 For further reference, please consider the following sections:
