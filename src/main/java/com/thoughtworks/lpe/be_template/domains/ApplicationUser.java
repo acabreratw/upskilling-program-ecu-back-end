@@ -1,4 +1,4 @@
-package com.thoughtworks.lpe.be_template.user;
+package com.thoughtworks.lpe.be_template.domains;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

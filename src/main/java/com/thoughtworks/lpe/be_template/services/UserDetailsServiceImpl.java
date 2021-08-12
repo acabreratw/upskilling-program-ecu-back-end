@@ -1,5 +1,7 @@
-package com.thoughtworks.lpe.be_template.user;
+package com.thoughtworks.lpe.be_template.services;
 
+import com.thoughtworks.lpe.be_template.domains.ApplicationUser;
+import com.thoughtworks.lpe.be_template.repositories.ApplicationUserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

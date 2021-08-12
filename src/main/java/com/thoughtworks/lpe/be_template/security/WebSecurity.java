@@ -1,6 +1,6 @@
 package com.thoughtworks.lpe.be_template.security;
 
-import com.thoughtworks.lpe.be_template.user.UserDetailsServiceImpl;
+import com.thoughtworks.lpe.be_template.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

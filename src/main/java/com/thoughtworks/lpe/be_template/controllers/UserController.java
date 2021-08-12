@@ -1,5 +1,7 @@
-package com.thoughtworks.lpe.be_template.user;
+package com.thoughtworks.lpe.be_template.controllers;
 
+import com.thoughtworks.lpe.be_template.domains.ApplicationUser;
+import com.thoughtworks.lpe.be_template.repositories.ApplicationUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
