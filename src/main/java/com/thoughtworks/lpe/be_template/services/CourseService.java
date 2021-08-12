@@ -21,60 +21,15 @@ import java.util.stream.Collectors;
 
 import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.INVALID_COURSE_ID;
 
-@Service
-public class CourseService {
+public interface CourseService {
 
-    private final CourseRepository courseRepository;
-    private final UserCourseRepository userCourseRepository;
+    void saveCourse(Course course);
 
-    public CourseService(CourseRepository courseRepository, UserCourseRepository userCourseRepository) {
-        this.courseRepository = courseRepository;
-        this.userCourseRepository = userCourseRepository;
-    }
+    List<Course> findOpenedCourses(String userEmail, int page, int limit);
 
-    public void saveCourse(Course course) {
-        courseRepository.save(new CourseMapper().domainToDto(course));
-    }
+    void updateCourse(Course updateCourse);
 
-    public List<Course> findOpenedCourses(String userEmail, int page, int limit){
-        return courseRepository.findAll().stream()
-                .filter(isAnOpenedCourseForTheUser(userEmail))
-                .map(CourseMapper::dtoToDomain)
-                .skip(page*limit).limit(limit)
-                .collect(Collectors.toList());
-    }
+    Course findCourseById(int courseId);
 
-    private Predicate<CourseDto> isAnOpenedCourseForTheUser(String userEmail) {
-        List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.PRO, CourseStatus.APR);
-        return courseDto -> !userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
-                .map(UserCourseDto::getCourseId)
-                .collect(Collectors.toList())
-                .contains(courseDto.getId());
-    }
-
-    public void updateCourse(Course updateCourse) {
-        Optional<CourseDto> course = courseRepository.findById(updateCourse.getId());
-
-        CourseDto updateCourseDto = new CourseMapper().domainToDto(updateCourse);
-        CourseDto courseDto = course.orElseThrow(() -> new EntityNotFoundException()) ;
-        courseDto = updateCourseDto;
-
-        courseRepository.save(courseDto);
-    }
-
-    public Course findCourseById(int courseId) {
-        return courseRepository.findById(courseId)
-                .map(CourseMapper::dtoToDomain)
-                .orElseThrow(this::throwLogicBusinessExceptionBecauseOfInvalidCourseId);
-    }
-
-    private LogicBusinessException throwLogicBusinessExceptionBecauseOfInvalidCourseId(){
-        return new LogicBusinessException(INVALID_COURSE_ID);
-    }
-
-    @Transactional
-    public void deleteCourse(int courseId){
-        userCourseRepository.deleteAllByCourseId(courseId);
-        courseRepository.deleteById(courseId);
-    }
+    void deleteCourse(int courseId);
 }

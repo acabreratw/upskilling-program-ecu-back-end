@@ -8,9 +8,12 @@ import com.thoughtworks.lpe.be_template.dtos.UserCourseDto;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.UserCourseRepository;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
@@ -22,19 +25,17 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class CourseServiceTest {
 
+    @Mock
     private CourseRepository courseRepository;
+
+    @Mock
     private UserCourseRepository userCourseRepository;
 
-    private CourseService courseService;
-
-    @Before
-    public void setUp() {
-        this.courseRepository = mock(CourseRepository.class);
-        this.userCourseRepository = mock(UserCourseRepository.class);
-        this.courseService = new CourseService(this.courseRepository, userCourseRepository);
-    }
+    @InjectMocks
+    private final CourseService courseService = new CourseServiceImpl();
 
     @Test
     public void shouldSaveGivenCourse() {
