@@ -1,9 +1,9 @@
 package com.thoughtworks.lpe.be_template.services;
 
-import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.domains.UserCourse;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
+import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
@@ -32,33 +32,33 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void saveCourse(CourseDto courseDto) {
-        courseRepository.save(new CourseMapper().domainToDto(courseDto));
+        courseRepository.save(CourseMapper.dtoToDomain(courseDto));
     }
 
     @Override
     public List<CourseDto> findOpenedCourses(String userEmail, int page, int limit) {
         return courseRepository.findAll().stream()
                 .filter(isAnOpenedCourseForTheUser(userEmail))
-                .map(CourseMapper::dtoToDomain)
-                .skip(page*limit).limit(limit)
+                .map(CourseMapper::domainToDto)
+                .skip((long) page *limit).limit(limit)
                 .collect(Collectors.toList());
     }
 
     @Override
     public void updateCourse(CourseDto updateCourseDto) {
-        Optional<Course> course = courseRepository.findById(updateCourseDto.getId());
+        Optional<Course> course = Optional.ofNullable(courseRepository.findById(updateCourseDto.getId()).orElseThrow(EntityNotFoundException::new));
 
-        Course updateCourse = new CourseMapper().domainToDto(updateCourseDto);
-        Course courseDto = course.orElseThrow(() -> new EntityNotFoundException()) ;
-        courseDto = updateCourse;
+        if (course.isPresent()) {
+            Course actualCourse = CourseMapper.dtoToDomain(updateCourseDto);
+            actualCourse.setId(course.get().getId());
 
-        courseRepository.save(courseDto);
+            courseRepository.save(actualCourse);
+        }
     }
 
     @Override
     public CourseDto findCourseById(int courseId) {
-        return courseRepository.findById(courseId)
-                .map(CourseMapper::dtoToDomain)
+        return courseRepository.findById(courseId).map(CourseMapper::domainToDto)
                 .orElseThrow(this::throwLogicBusinessExceptionBecauseOfInvalidCourseId);
     }
 

@@ -3,9 +3,9 @@ package com.thoughtworks.lpe.be_template.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.ErrorResponse;
-import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
+import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
@@ -36,8 +36,6 @@ import java.util.List;
 
 import static com.thoughtworks.lpe.be_template.util.Constants.DATETIME_FORMAT;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -66,9 +64,9 @@ public class CourseControllerIT {
     @Test
     public void shouldReturn200WhenCourseIsSavedSuccessfully() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseResource courseResource = new CourseResourceBuilder().withDescription("Description")
-                .withFreeEndDate(dateString)
-                .withFreeStartDate(dateString)
+        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
+                .withFreeEndDate(LocalDateTime.parse(dateString))
+                .withFreeStartDate(LocalDateTime.parse(dateString))
                 .withImageUrl("url")
                 .withName("Test course")
                 .withPrice(BigDecimal.TEN)
@@ -116,8 +114,8 @@ public class CourseControllerIT {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-        List<CourseResource> courseResourceList =
-                mapper.readerForListOf(CourseResource.class)
+        List<CourseDto> courseResourceList =
+                mapper.readerForListOf(CourseDto.class)
                         .readValue(result.getResponse().getContentAsString());
         assertThat(courseResourceList.size()).isEqualTo(2);
     }
@@ -136,18 +134,20 @@ public class CourseControllerIT {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-        List<CourseResource> courseResourceList =
-                mapper.readerForListOf(CourseResource.class)
+        List<CourseDto> courseResourceList =
+                mapper.readerForListOf(CourseDto.class)
                         .readValue(result.getResponse().getContentAsString());
         assertThat(courseResourceList.size()).isEqualTo(6);
     }
 
     @Test
     public void shouldReturn200WhenCourseIsUpdatedSuccessfully() throws Exception {
-        String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseResource courseResource = new CourseResourceBuilder().withDescription("Description")
-                .withFreeEndDate(dateString)
-                .withFreeStartDate(dateString)
+        LocalDateTime endDateTime = LocalDateTime.parse(LocalDateTime.now().plusDays(5).format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
+        LocalDateTime startDateTime = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
+        
+        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
+                .withFreeEndDate(endDateTime)
+                .withFreeStartDate(startDateTime)
                 .withImageUrl("url")
                 .withName("Test course")
                 .withPrice(BigDecimal.TEN)
@@ -155,9 +155,9 @@ public class CourseControllerIT {
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+        Course expectedCourse = new CourseBuilder().withDescription("Description")
+                .withFreeEndDate(LocalDateTime.parse(endDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .withFreeStartDate(LocalDateTime.parse(startDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
                 .withName("Test course")
                 .withPrice(BigDecimal.TEN)
@@ -172,9 +172,9 @@ public class CourseControllerIT {
 
         ArgumentCaptor<CourseDto> argumentCaptor = ArgumentCaptor.forClass(CourseDto.class);
         verify(courseService).updateCourse(argumentCaptor.capture());
-        CourseDto captureCourseDto = argumentCaptor.<CourseDto>getValue();
+        CourseDto captureCourse = argumentCaptor.getValue();
 
-        assertThat(captureCourseDto).isEqualToComparingFieldByField(expectedCourseDto);
+        assertThat(captureCourse).isEqualToComparingFieldByField(expectedCourse);
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(result.getResponse().getContentAsString()).isEqualTo("updated successfully");
     }
@@ -182,9 +182,9 @@ public class CourseControllerIT {
     @Test
     public void shouldReturn404WhenCourseIdDoNotExist() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseResource courseResource = new CourseResourceBuilder().withDescription("Description")
-                .withFreeEndDate(dateString)
-                .withFreeStartDate(dateString)
+        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
+                .withFreeEndDate(LocalDateTime.parse(dateString))
+                .withFreeStartDate(LocalDateTime.parse(dateString))
                 .withImageUrl("url")
                 .withName("Test course")
                 .withPrice(BigDecimal.TEN)
@@ -211,9 +211,9 @@ public class CourseControllerIT {
 
         ArgumentCaptor<CourseDto> argumentCaptor = ArgumentCaptor.forClass(CourseDto.class);
         verify(courseService).updateCourse(argumentCaptor.capture());
-        CourseDto captureCourseDto = argumentCaptor.<CourseDto>getValue();
+        CourseDto captureCourse = argumentCaptor.getValue();
 
-        assertThat(captureCourseDto).isEqualToComparingFieldByField(expectedCourseDto);
+        assertThat(captureCourse).isEqualToComparingFieldByField(expectedCourseDto);
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
 
     }
@@ -245,8 +245,8 @@ public class CourseControllerIT {
     @Test
     public void shouldReturnCourseDetailsGivenCourseId() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseResource expectedCourseResource = new CourseResourceBuilder().withDescription("Description")
-                .withFreeEndDate(dateString).withFreeStartDate(dateString).withImageUrl("Image url")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
+                .withFreeEndDate(LocalDateTime.parse(dateString)).withFreeStartDate(LocalDateTime.parse(dateString)).withImageUrl("Image url")
                 .withName("Course 1th").withPrice(BigDecimal.TEN).withId(1).build();
         CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
@@ -259,9 +259,9 @@ public class CourseControllerIT {
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-        CourseResource courseResource =
-                mapper.readValue(result.getResponse().getContentAsString(), CourseResource.class);
-        assertThat(courseResource).isEqualToComparingFieldByField(expectedCourseResource);
+        CourseDto courseResource =
+                mapper.readValue(result.getResponse().getContentAsString(), CourseDto.class);
+        assertThat(courseResource).isEqualToComparingFieldByField(expectedCourseDto);
     }
 
     @Test

@@ -1,11 +1,11 @@
 package com.thoughtworks.lpe.be_template.services;
 
+import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.UserCourse;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
-import com.thoughtworks.lpe.be_template.domains.UserCourse;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
+import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.UserCourseRepository;
 import org.junit.Test;
@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +60,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void shouldReturnAllOpenedCoursesGivenAUserEmailSecondPageAndTwoItemsAsLimit() throws Exception {
+    public void shouldReturnAllOpenedCoursesGivenAUserEmailSecondPageAndTwoItemsAsLimit() {
 
         String userEmail = "getabstract@mail.com";
         LocalDateTime dateTime = LocalDateTime.now();
@@ -90,7 +91,7 @@ public class CourseServiceTest {
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
         when(userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
-                .thenReturn(Arrays.asList());
+                .thenReturn(Collections.emptyList());
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
 
@@ -99,9 +100,10 @@ public class CourseServiceTest {
 
     @Test
     public void shouldUpdateExistingCourseWhenISendNewDataWithAnId(){
+        //Arrange
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
+        CourseDto courseToUpdate = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -110,37 +112,29 @@ public class CourseServiceTest {
                 .withId(1)
                 .build();
 
-        Course courseToUpdate = new CourseBuilder().withDescription("Description")
+        Course updateCourse = CourseMapper.dtoToDomain(new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
                 .withName("Test course")
                 .withPrice(BigDecimal.TEN)
                 .withId(1)
-                .build();
+                .build());
 
-        CourseDto updateCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
-                .withId(1)
-                .build();
+        when(courseRepository.findById(1)).thenReturn(Optional.of(updateCourse));
 
-        when(courseRepository.findById(1)).thenReturn(Optional.of(courseToUpdate));
+        //Act
+        courseService.updateCourse(courseToUpdate);
 
-        courseService.updateCourse(updateCourseDto);
-
+        //Assert/Verify
         verify(courseRepository).save(any(Course.class));
-
     }
 
     @Test(expected = EntityNotFoundException.class)
     public void shouldTrowEntityNotFoundExceptionWhenCourseNotExist() {
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto updateCourseDto = new CourseDtoBuilder().withDescription("Description")
+        CourseDto updateCourse = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -149,9 +143,9 @@ public class CourseServiceTest {
                 .withId(1)
                 .build();
 
-        when(courseRepository.findById(1)).thenReturn(Optional.ofNullable(null));
+        when(courseRepository.findById(1)).thenReturn(Optional.empty());
 
-        courseService.updateCourse(updateCourseDto);
+        courseService.updateCourse(updateCourse);
     }
 
     private List<Course> mockFindAllCourses(LocalDateTime dateTime){
@@ -204,7 +198,7 @@ public class CourseServiceTest {
 
     @Test
     public void shouldDeleteACourseGivenAOpenedCourseId() {
-        Integer courseId = 6;
+        int courseId = 6;
         ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
 
         courseService.deleteCourse(courseId);
