@@ -2,9 +2,9 @@ package com.thoughtworks.lpe.be_template.mappers;
 
 import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
+import com.thoughtworks.lpe.be_template.domains.Course;
 import org.springframework.stereotype.Component;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 
@@ -15,19 +15,19 @@ import static com.thoughtworks.lpe.be_template.util.Constants.DATETIME_FORMAT;
 
 @Component
 public class CourseMapper {
-    public CourseDto domainToDto(Course course) {
+    public Course domainToDto(CourseDto courseDto) {
         return new CourseDtoBuilder()
-                .withDescription(course.getDescription())
-                .withFreeEndDate(course.getFreeEndDate())
-                .withFreeStartDate(course.getFreeStartDate())
-                .withId(course.getId())
-                .withImageUrl(course.getImageUrl())
-                .withName(course.getName())
-                .withPrice(course.getPrice())
+                .withDescription(courseDto.getDescription())
+                .withFreeEndDate(courseDto.getFreeEndDate())
+                .withFreeStartDate(courseDto.getFreeStartDate())
+                .withId(courseDto.getId())
+                .withImageUrl(courseDto.getImageUrl())
+                .withName(courseDto.getName())
+                .withPrice(courseDto.getPrice())
                 .build();
     }
 
-    public Course resourceToDomain(CourseResource resource) {
+    public CourseDto resourceToDomain(CourseResource resource) {
         return new CourseBuilder()
                 .withDescription(resource.getDescription())
                 .withFreeEndDate(LocalDateTime.parse(resource.getFreeEndDate(),DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
@@ -39,26 +39,26 @@ public class CourseMapper {
                 .build();
     }
 
-    public static CourseResource domainToResource(Course course) {
+    public static CourseResource domainToResource(CourseDto courseDto) {
         return new CourseResourceBuilder()
-                .withDescription(course.getDescription())
-                .withFreeEndDate(formatterDate(course.getFreeEndDate()))
-                .withFreeStartDate(formatterDate(course.getFreeStartDate()))
-                .withImageUrl(course.getImageUrl())
-                .withPrice(course.getPrice())
-                .withName(course.getName())
-                .withId(course.getId())
+                .withDescription(courseDto.getDescription())
+                .withFreeEndDate(formatterDate(courseDto.getFreeEndDate()))
+                .withFreeStartDate(formatterDate(courseDto.getFreeStartDate()))
+                .withImageUrl(courseDto.getImageUrl())
+                .withPrice(courseDto.getPrice())
+                .withName(courseDto.getName())
+                .withId(courseDto.getId())
                 .build();
     }
 
-    public static Course dtoToDomain(CourseDto courseDto){
-        return new CourseBuilder().withName(courseDto.getName())
-                .withId(courseDto.getId())
-                .withDescription(courseDto.getDescription())
-                .withImageUrl(courseDto.getImageUrl())
-                .withFreeStartDate(courseDto.getFreeStartDate())
-                .withFreeEndDate(courseDto.getFreeEndDate())
-                .withPrice(courseDto.getPrice()).build();
+    public static CourseDto dtoToDomain(Course course){
+        return new CourseBuilder().withName(course.getName())
+                .withId(course.getId())
+                .withDescription(course.getDescription())
+                .withImageUrl(course.getImageUrl())
+                .withFreeStartDate(course.getFreeStartDate())
+                .withFreeEndDate(course.getFreeEndDate())
+                .withPrice(course.getPrice()).build();
     }
 
     private static String formatterDate(LocalDateTime availability){

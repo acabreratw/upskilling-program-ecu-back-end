@@ -1,16 +1,15 @@
 package com.thoughtworks.lpe.be_template.dtos.builders;
 
 import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CourseDtoBuilder {
-    private CourseDto course;
+    private Course course;
 
     public CourseDtoBuilder() {
-        this.course = new CourseDto();
+        this.course = new Course();
     }
 
     public CourseDtoBuilder withName(String name){
@@ -48,7 +47,7 @@ public class CourseDtoBuilder {
         return this;
     }
 
-    public CourseDto build(){
+    public Course build(){
         return this.course;
     }
 }

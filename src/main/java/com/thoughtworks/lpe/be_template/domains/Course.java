@@ -1,35 +1,67 @@
 package com.thoughtworks.lpe.be_template.domains;
 
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
-import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-
+import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class Course {
+@Entity
+@Table(name = "course")
+public class Course implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @Column(name = "id", insertable = false, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "name", nullable = false)
     private String name;
-    private String description;
-    private BigDecimal price;
-    private String imageUrl;
-    private LocalDateTime freeStartDate;
-    private LocalDateTime freeEndDate;
-    public Course() {}
 
-    public Course(String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate, int id) {
+    @Column(name = "description", nullable = false)
+    private String description;
+
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @Column(name = "free_start_date")
+    private LocalDateTime freeStartDate;
+
+    @Column(name = "free_end_date")
+    private LocalDateTime freeEndDate;
+
+    public Course() {
+    }
+
+    public Course(int id, String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.freeStartDate = freeStartDate;
         this.freeEndDate = freeEndDate;
+    }
+
+    public Course(String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.freeStartDate = freeStartDate;
+        this.freeEndDate = freeEndDate;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
-    public int getId() {return id; }
-
-    public void setId(int id) { this.id = id;}
+    public int getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

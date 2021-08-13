@@ -1,7 +1,7 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
 import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
-import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.services.CourseService;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +25,8 @@ public class CourseController {
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseResource courseResource) {
-        Course course = courseMapper.resourceToDomain(courseResource);
-        courseService.saveCourse(course);
+        CourseDto courseDto = courseMapper.resourceToDomain(courseResource);
+        courseService.saveCourse(courseDto);
         return ResponseEntity.ok("saved successfully");
     }
 
@@ -52,8 +52,8 @@ public class CourseController {
 
     @PutMapping
     public ResponseEntity<String> updateCourse(@RequestBody CourseResource courseResource) {
-        Course course = courseMapper.resourceToDomain(courseResource);
-        courseService.updateCourse(course);
+        CourseDto courseDto = courseMapper.resourceToDomain(courseResource);
+        courseService.updateCourse(courseDto);
         return ResponseEntity.ok("updated successfully");
     }
 

@@ -2,9 +2,9 @@ package com.thoughtworks.lpe.be_template.mappers;
 
 import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
+import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +12,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 
 import static com.thoughtworks.lpe.be_template.util.Constants.DATETIME_FORMAT;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +28,7 @@ public class CourseMapperTest {
     @Test
     public void shouldReturnCourseDtoFromGivenCourse() {
         LocalDateTime date = LocalDateTime.now();
-        Course course = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -39,7 +37,7 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
+        Course expectedCourse = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -48,9 +46,9 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        CourseDto courseDto = courseMapper.domainToDto(course);
+        Course course = courseMapper.domainToDto(courseDto);
 
-        assertThat(courseDto).isEqualToComparingFieldByField(expectedCourseDto);
+        assertThat(course).isEqualToComparingFieldByField(expectedCourse);
     }
 
     @Test
@@ -65,7 +63,7 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        Course expectedCourse = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -74,15 +72,15 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        Course course = courseMapper.resourceToDomain(resource);
+        CourseDto courseDto = courseMapper.resourceToDomain(resource);
 
-        assertThat(course).isEqualToComparingFieldByField(expectedCourse);
+        assertThat(courseDto).isEqualToComparingFieldByField(expectedCourseDto);
     }
 
     @Test
     public void shouldReturnCourseResourceFromGivenCourseDomain() {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        Course course = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -99,16 +97,16 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        CourseResource courseResource = CourseMapper.domainToResource(course);
+        CourseResource courseResource = CourseMapper.domainToResource(courseDto);
         assertThat(courseResource).isEqualToComparingFieldByField(expectedResource);
     }
 
     @Test
     public void shouldReturnCourseFromGivenCourseDto() {
         LocalDateTime date = LocalDateTime.now();
-        CourseDto courseDto = new CourseDto(1,"Test course", "Description",
+        Course course = new Course(1,"Test course", "Description",
                 BigDecimal.TEN, "url", date, date);
-        Course expectedCourse = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -117,7 +115,7 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        Course course = CourseMapper.dtoToDomain(courseDto);
-        assertThat(course).isEqualToComparingFieldByField(expectedCourse);
+        CourseDto courseDto = CourseMapper.dtoToDomain(course);
+        assertThat(courseDto).isEqualToComparingFieldByField(expectedCourseDto);
     }
 }

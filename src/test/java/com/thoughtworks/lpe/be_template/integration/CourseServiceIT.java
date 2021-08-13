@@ -1,32 +1,20 @@
 package com.thoughtworks.lpe.be_template.integration;
 
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
-import com.thoughtworks.lpe.be_template.dtos.UserCourseDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.UserCourseRepository;
 import com.thoughtworks.lpe.be_template.services.CourseService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -43,9 +31,9 @@ public class CourseServiceIT {
 
         String userEmail = "getabstract@mail.com";
 
-        List<Course> courseDtoList = courseService.findOpenedCourses(userEmail, 1, 4);
+        List<CourseDto> courseDtoDtoList = courseService.findOpenedCourses(userEmail, 1, 4);
 
-        assertThat(courseDtoList.size()).isEqualTo(2);
+        assertThat(courseDtoDtoList.size()).isEqualTo(2);
     }
 
     @Test
@@ -53,9 +41,9 @@ public class CourseServiceIT {
 
         String userEmail = "user-without-courses@mail.com";
 
-        List<Course> courseDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
+        List<CourseDto> courseDtoDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
 
-        assertThat(courseDtoList.size()).isEqualTo(9);
+        assertThat(courseDtoDtoList.size()).isEqualTo(9);
     }
 
     @Test
@@ -63,9 +51,9 @@ public class CourseServiceIT {
 
         String expectedCourseName = "Course test first";
 
-        Course course = courseService.findCourseById(1);
+        CourseDto courseDto = courseService.findCourseById(1);
 
-        assertThat(course.getName()).isEqualTo(expectedCourseName);
+        assertThat(courseDto.getName()).isEqualTo(expectedCourseName);
     }
 
     @Test

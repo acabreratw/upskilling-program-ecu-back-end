@@ -1,67 +1,32 @@
 package com.thoughtworks.lpe.be_template.dtos;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "course")
-public class CourseDto implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @Column(name = "id", insertable = false, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CourseDto {
     private int id;
 
-    @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "price", nullable = false)
     private BigDecimal price;
-
-    @Column(name = "image_url", nullable = false)
     private String imageUrl;
-
-    @Column(name = "free_start_date")
     private LocalDateTime freeStartDate;
-
-    @Column(name = "free_end_date")
     private LocalDateTime freeEndDate;
+    public CourseDto() {}
 
-    public CourseDto() {
-    }
-
-    public CourseDto(int id,  String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
-        this.id = id;
+    public CourseDto(String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate, int id) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.freeStartDate = freeStartDate;
         this.freeEndDate = freeEndDate;
-    }
-
-    public CourseDto(String name, String description, BigDecimal price, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.freeStartDate = freeStartDate;
-        this.freeEndDate = freeEndDate;
-    }
-
-    public void setId(int id) {
         this.id = id;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() {return id; }
+
+    public void setId(int id) { this.id = id;}
 
     public String getName() {
         return name;

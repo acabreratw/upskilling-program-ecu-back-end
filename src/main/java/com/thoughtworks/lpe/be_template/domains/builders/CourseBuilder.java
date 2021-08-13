@@ -1,54 +1,53 @@
 package com.thoughtworks.lpe.be_template.domains.builders;
 
-import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class CourseBuilder {
-    private Course course;
+    private CourseDto courseDto;
 
     public CourseBuilder() {
-        this.course = new Course();
+        this.courseDto = new CourseDto();
     }
 
     public CourseBuilder withName(String name){
-        this.course.setName(name);
+        this.courseDto.setName(name);
         return this;
     }
 
     public CourseBuilder withDescription(String description){
-        this.course.setDescription(description);
+        this.courseDto.setDescription(description);
         return this;
     }
 
     public CourseBuilder withPrice(BigDecimal price){
-        this.course.setPrice(price);
+        this.courseDto.setPrice(price);
         return this;
     }
 
     public CourseBuilder withImageUrl(String imageUrl){
-        this.course.setImageUrl(imageUrl);
+        this.courseDto.setImageUrl(imageUrl);
         return this;
     }
 
     public CourseBuilder withFreeStartDate(LocalDateTime freeStartDate){
-        this.course.setFreeStartDate(freeStartDate);
+        this.courseDto.setFreeStartDate(freeStartDate);
         return this;
     }
 
     public CourseBuilder withFreeEndDate(LocalDateTime freeEndDate){
-        this.course.setFreeEndDate(freeEndDate);
+        this.courseDto.setFreeEndDate(freeEndDate);
         return this;
     }
 
     public CourseBuilder withId(int id) {
-        this.course.setId(id);
+        this.courseDto.setId(id);
         return this;
     }
 
-    public Course build(){
-        return this.course;
+    public CourseDto build(){
+        return this.courseDto;
     }
 }

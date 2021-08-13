@@ -1,11 +1,13 @@
-package com.thoughtworks.lpe.be_template.dtos;
+package com.thoughtworks.lpe.be_template.domains;
+
+import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Table(name = "user_course")
 @Entity
-public class UserCourseDto implements Serializable {
+public class UserCourse implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -22,10 +24,10 @@ public class UserCourseDto implements Serializable {
     @Column(name = "user_email", nullable = false)
     private String userEmail;
 
-    public UserCourseDto() {
+    public UserCourse() {
     }
 
-    public UserCourseDto(Integer courseId, CourseStatus status, String userEmail) {
+    public UserCourse(Integer courseId, CourseStatus status, String userEmail) {
         this.courseId = courseId;
         this.status = status;
         this.userEmail = userEmail;

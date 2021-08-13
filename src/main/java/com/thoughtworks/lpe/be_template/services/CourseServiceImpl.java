@@ -1,9 +1,9 @@
 package com.thoughtworks.lpe.be_template.services;
 
-import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
+import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
-import com.thoughtworks.lpe.be_template.dtos.UserCourseDto;
+import com.thoughtworks.lpe.be_template.domains.UserCourse;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
@@ -31,12 +31,12 @@ public class CourseServiceImpl implements CourseService {
     private UserCourseRepository userCourseRepository;
 
     @Override
-    public void saveCourse(Course course) {
-        courseRepository.save(new CourseMapper().domainToDto(course));
+    public void saveCourse(CourseDto courseDto) {
+        courseRepository.save(new CourseMapper().domainToDto(courseDto));
     }
 
     @Override
-    public List<Course> findOpenedCourses(String userEmail, int page, int limit) {
+    public List<CourseDto> findOpenedCourses(String userEmail, int page, int limit) {
         return courseRepository.findAll().stream()
                 .filter(isAnOpenedCourseForTheUser(userEmail))
                 .map(CourseMapper::dtoToDomain)
@@ -45,18 +45,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public void updateCourse(Course updateCourse) {
-        Optional<CourseDto> course = courseRepository.findById(updateCourse.getId());
+    public void updateCourse(CourseDto updateCourseDto) {
+        Optional<Course> course = courseRepository.findById(updateCourseDto.getId());
 
-        CourseDto updateCourseDto = new CourseMapper().domainToDto(updateCourse);
-        CourseDto courseDto = course.orElseThrow(() -> new EntityNotFoundException()) ;
-        courseDto = updateCourseDto;
+        Course updateCourse = new CourseMapper().domainToDto(updateCourseDto);
+        Course courseDto = course.orElseThrow(() -> new EntityNotFoundException()) ;
+        courseDto = updateCourse;
 
         courseRepository.save(courseDto);
     }
 
     @Override
-    public Course findCourseById(int courseId) {
+    public CourseDto findCourseById(int courseId) {
         return courseRepository.findById(courseId)
                 .map(CourseMapper::dtoToDomain)
                 .orElseThrow(this::throwLogicBusinessExceptionBecauseOfInvalidCourseId);
@@ -69,10 +69,10 @@ public class CourseServiceImpl implements CourseService {
         courseRepository.deleteById(courseId);
     }
 
-    private Predicate<CourseDto> isAnOpenedCourseForTheUser(String userEmail) {
+    private Predicate<Course> isAnOpenedCourseForTheUser(String userEmail) {
         List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.PRO, CourseStatus.APR);
         return courseDto -> !userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
-                .map(UserCourseDto::getCourseId)
+                .map(UserCourse::getCourseId)
                 .collect(Collectors.toList())
                 .contains(courseDto.getId());
     }
