@@ -4,6 +4,7 @@ import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.services.CourseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +16,11 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/v1/course")
 public class CourseController {
 
-    private final CourseService courseService;
-    private final CourseMapper courseMapper;
+    @Autowired
+    private CourseService courseService;
 
-    public CourseController(CourseService courseService, CourseMapper courseMapper) {
-        this.courseService = courseService;
-        this.courseMapper = courseMapper;
-    }
+    @Autowired
+    private CourseMapper courseMapper;
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseResource courseResource) {

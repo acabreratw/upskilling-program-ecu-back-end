@@ -7,7 +7,7 @@ import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.ErrorResponse;
 import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
+import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
 import com.thoughtworks.lpe.be_template.services.CourseService;
@@ -76,7 +76,7 @@ public class CourseControllerIT {
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -155,7 +155,7 @@ public class CourseControllerIT {
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -192,7 +192,7 @@ public class CourseControllerIT {
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -248,7 +248,7 @@ public class CourseControllerIT {
         CourseResource expectedCourseResource = new CourseResourceBuilder().withDescription("Description")
                 .withFreeEndDate(dateString).withFreeStartDate(dateString).withImageUrl("Image url")
                 .withName("Course 1th").withPrice(BigDecimal.TEN).withId(1).build();
-        CourseDto courseDto = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("Image url").withName("Course 1th").withPrice(BigDecimal.TEN).withId(1).build();

@@ -1,6 +1,6 @@
 package com.thoughtworks.lpe.be_template.domains;
 
-import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;

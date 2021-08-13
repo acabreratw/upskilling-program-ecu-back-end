@@ -1,11 +1,11 @@
 package com.thoughtworks.lpe.be_template.services;
 
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
-import com.thoughtworks.lpe.be_template.domains.UserCourse;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
+import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
+import com.thoughtworks.lpe.be_template.domains.UserCourse;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.UserCourseRepository;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class CourseServiceTest {
     public void shouldSaveGivenCourse() {
         LocalDateTime date = LocalDateTime.now();
         ArgumentCaptor<Course> captor = ArgumentCaptor.forClass(Course.class);
-        CourseDto courseDto = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -63,11 +63,11 @@ public class CourseServiceTest {
 
         String userEmail = "getabstract@mail.com";
         LocalDateTime dateTime = LocalDateTime.now();
-        CourseDto expectedCourseDto7Th = new CourseBuilder().withId(7).withName("Course 7th").withDescription("Description")
+        CourseDto expectedCourseDto7Th = new CourseDtoBuilder().withId(7).withName("Course 7th").withDescription("Description")
                 .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
-        CourseDto expectedCourseDto8Th = new CourseBuilder().withId(8).withName("Course 8th").withDescription("Description")
+        CourseDto expectedCourseDto8Th = new CourseDtoBuilder().withId(8).withName("Course 8th").withDescription("Description")
                 .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
-        CourseDto expectedCourseDto9Th = new CourseBuilder().withId(9).withName("Course 9th").withDescription("Description")
+        CourseDto expectedCourseDto9Th = new CourseDtoBuilder().withId(9).withName("Course 9th").withDescription("Description")
                 .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
@@ -101,7 +101,7 @@ public class CourseServiceTest {
     public void shouldUpdateExistingCourseWhenISendNewDataWithAnId(){
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -110,7 +110,7 @@ public class CourseServiceTest {
                 .withId(1)
                 .build();
 
-        Course courseToUpdate = new CourseDtoBuilder().withDescription("Description")
+        Course courseToUpdate = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -119,7 +119,7 @@ public class CourseServiceTest {
                 .withId(1)
                 .build();
 
-        CourseDto updateCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto updateCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -140,7 +140,7 @@ public class CourseServiceTest {
     public void shouldTrowEntityNotFoundExceptionWhenCourseNotExist() {
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto updateCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto updateCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -187,7 +187,7 @@ public class CourseServiceTest {
         LocalDateTime date = LocalDateTime.now();
         Course course = new Course(1,"Course 1th", "Description",
                 BigDecimal.TEN, "Image url", date, date);
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("Image url")

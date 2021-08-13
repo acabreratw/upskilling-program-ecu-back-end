@@ -3,9 +3,9 @@ package com.thoughtworks.lpe.be_template.mappers;
 import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
-import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
+import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ public class CourseMapperTest {
     @Test
     public void shouldReturnCourseDtoFromGivenCourse() {
         LocalDateTime date = LocalDateTime.now();
-        CourseDto courseDto = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -37,7 +37,7 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        Course expectedCourse = new CourseDtoBuilder().withDescription("Description")
+        Course expectedCourse = new CourseBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")
@@ -63,7 +63,7 @@ public class CourseMapperTest {
                 .withId(1)
                 .build();
 
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -80,7 +80,7 @@ public class CourseMapperTest {
     @Test
     public void shouldReturnCourseResourceFromGivenCourseDomain() {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseDto courseDto = new CourseBuilder().withDescription("Description")
+        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withImageUrl("url")
@@ -106,7 +106,7 @@ public class CourseMapperTest {
         LocalDateTime date = LocalDateTime.now();
         Course course = new Course(1,"Test course", "Description",
                 BigDecimal.TEN, "url", date, date);
-        CourseDto expectedCourseDto = new CourseBuilder().withDescription("Description")
+        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
                 .withFreeEndDate(date)
                 .withFreeStartDate(date)
                 .withImageUrl("url")

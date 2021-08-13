@@ -1,6 +1,6 @@
 package com.thoughtworks.lpe.be_template.repositories;
 
-import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.domains.UserCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

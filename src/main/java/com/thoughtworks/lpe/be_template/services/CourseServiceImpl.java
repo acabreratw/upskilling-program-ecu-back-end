@@ -2,7 +2,7 @@ package com.thoughtworks.lpe.be_template.services;
 
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.dtos.CourseStatus;
+import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.domains.UserCourse;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;

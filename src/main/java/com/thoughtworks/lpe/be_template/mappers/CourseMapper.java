@@ -3,10 +3,10 @@ package com.thoughtworks.lpe.be_template.mappers;
 import com.thoughtworks.lpe.be_template.controllers.resources.CourseResource;
 import com.thoughtworks.lpe.be_template.controllers.resources.builders.CourseResourceBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
+import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.domains.Course;
 import org.springframework.stereotype.Component;
-import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
+import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +16,7 @@ import static com.thoughtworks.lpe.be_template.util.Constants.DATETIME_FORMAT;
 @Component
 public class CourseMapper {
     public Course domainToDto(CourseDto courseDto) {
-        return new CourseDtoBuilder()
+        return new CourseBuilder()
                 .withDescription(courseDto.getDescription())
                 .withFreeEndDate(courseDto.getFreeEndDate())
                 .withFreeStartDate(courseDto.getFreeStartDate())
@@ -28,7 +28,7 @@ public class CourseMapper {
     }
 
     public CourseDto resourceToDomain(CourseResource resource) {
-        return new CourseBuilder()
+        return new CourseDtoBuilder()
                 .withDescription(resource.getDescription())
                 .withFreeEndDate(LocalDateTime.parse(resource.getFreeEndDate(),DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .withFreeStartDate(LocalDateTime.parse(resource.getFreeStartDate(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
@@ -52,7 +52,7 @@ public class CourseMapper {
     }
 
     public static CourseDto dtoToDomain(Course course){
-        return new CourseBuilder().withName(course.getName())
+        return new CourseDtoBuilder().withName(course.getName())
                 .withId(course.getId())
                 .withDescription(course.getDescription())
                 .withImageUrl(course.getImageUrl())
