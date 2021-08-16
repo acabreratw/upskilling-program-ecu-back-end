@@ -5,7 +5,7 @@ Feature: Get courses
     * header Authorization = 'Bearer ' + token
     * url baseUrl
 
-  Scenario: Get courseDto details
+  Scenario: Get course details
     Given path '/api/v1/course/1'
     And request {}
     When method GET
