@@ -6,7 +6,7 @@ Feature: Get courses
     * url baseUrl
 
   Scenario: Get courseDto details
-    Given path '/api/v1/courseDto/1'
+    Given path '/api/v1/course/1'
     And request {}
     When method GET
     Then status 200
