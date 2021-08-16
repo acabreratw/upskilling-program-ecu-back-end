@@ -36,7 +36,7 @@ public class CourseServiceTest {
     private UserCourseRepository userCourseRepository;
 
     @InjectMocks
-    private final CourseService courseService = new CourseServiceImpl();
+    private final CourseService courseService = new CourseService();
 
     @Test
     public void shouldSaveGivenCourse() {
