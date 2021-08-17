@@ -85,8 +85,8 @@ public class CourseMapperTest {
     @Test
     public void shouldReturnCourseFromGivenCourseDto() {
         LocalDateTime date = LocalDateTime.now();
-        CourseDto courseDto = new CourseDto("Test course", "Description",
-                "url", date, date, 1);
+        CourseDto courseDto = new CourseDto(1,"Test course", "Description",
+                "url", date, date);
         CourseDto expectedCourseDto = CourseDto.builder().description("Description")
                 .freeEndDate(date)
                 .freeStartDate(date)

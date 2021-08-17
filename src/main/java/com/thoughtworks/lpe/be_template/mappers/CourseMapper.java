@@ -4,11 +4,6 @@ import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import static com.thoughtworks.lpe.be_template.util.Constants.DATETIME_FORMAT;
-
 @Component
 public class CourseMapper {
     public static CourseDto domainToDto(Course course) {
@@ -30,7 +25,4 @@ public class CourseMapper {
                 .freeEndDate(courseDto.getFreeEndDate()).build();
     }
 
-    private static String formatterDate(LocalDateTime availability){
-        return availability.format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-    }
 }
