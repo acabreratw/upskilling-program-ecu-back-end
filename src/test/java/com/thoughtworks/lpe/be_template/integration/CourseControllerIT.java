@@ -211,26 +211,26 @@ public class CourseControllerIT {
 
     private List<CourseDto> mockFindOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
-                new CourseDto("Course 8th", "Description", 
-                        "Image url", dateTime, dateTime, 8),
-                new CourseDto("Course 9th", "Description", 
-                        "Image url", dateTime, dateTime, 9));
+                new CourseDto(8,"Course 8th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(9,"Course 9th", "Description",
+                        "Image url", dateTime, dateTime));
     }
 
     private List<CourseDto> mockFindAllOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
-                new CourseDto("Course 3th", "Description", 
-                        "Image url", dateTime, dateTime, 3),
-                new CourseDto("Course 4th", "Description", 
-                        "Image url", dateTime, dateTime, 4),
-                new CourseDto("Course 6th", "Description", 
-                        "Image url", dateTime, dateTime, 6),
-                new CourseDto("Course 7th", "Description", 
-                        "Image url", dateTime, dateTime, 7),
-                new CourseDto("Course 8th", "Description", 
-                        "Image url", dateTime, dateTime, 8),
-                new CourseDto("Course 9th", "Description", 
-                        "Image url", dateTime, dateTime, 9));
+                new CourseDto(3, "Course 3th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(4, "Course 4th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(6, "Course 6th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(7, "Course 7th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(8, "Course 8th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(9, "Course 9th", "Description",
+                        "Image url", dateTime, dateTime));
     }
 
     @Test
