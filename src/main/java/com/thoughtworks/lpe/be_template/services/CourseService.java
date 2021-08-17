@@ -9,7 +9,6 @@ import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
@@ -63,16 +62,10 @@ public class CourseService {
                 .orElseThrow(this::throwLogicBusinessExceptionBecauseOfInvalidCourseId);
     }
 
-    @Transactional
-    public void deleteCourse(int courseId) {
-        userCourseRepository.deleteAllByCourseId(courseId);
-        courseRepository.deleteById(courseId);
-    }
-
     private Predicate<Course> isAnOpenedCourseForTheUser(String userEmail) {
         List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.PRO, CourseStatus.APR);
-        return courseDto -> !userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
-                .map(traineeUserCourse -> traineeUserCourse.getTraineeUserCoursePKey().getCourse().getId())
+        return courseDto -> !userCourseRepository.findAllByUserIdAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
+                .map(traineeUserCourse -> traineeUserCourse.getPKey().getCourse().getId())
                 .collect(Collectors.toList())
                 .contains(courseDto.getId());
     }

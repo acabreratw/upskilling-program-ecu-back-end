@@ -1,12 +1,10 @@
 package com.thoughtworks.lpe.be_template.domains;
 
+import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -26,7 +24,8 @@ public class User implements Serializable {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
     @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Override
     public boolean equals(Object o) {

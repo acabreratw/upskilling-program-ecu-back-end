@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
@@ -14,11 +15,13 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TraineeUserCourseId implements Serializable {
+    @ManyToOne
     @JoinColumn(referencedColumnName = "id", name = "course_id")
     @NotNull
     private Course course;
 
+    @ManyToOne
     @JoinColumn(referencedColumnName = "id", name = "user_id")
     @NotNull
-    private User user;
+    private User traineeUser;
 }

@@ -65,15 +65,4 @@ public class CourseServiceIT {
                 .isInstanceOf(LogicBusinessException.class);
     }
 
-    @Test
-    public void shouldDeleteACourseGivenAOpenedCourseId() throws Exception {
-
-        Integer courseId = 10;
-
-        assertThat(courseRepository.findById(courseId).isPresent()).isTrue();
-
-        courseService.deleteCourse(courseId);
-
-        assertThat(courseRepository.findById(courseId).isPresent()).isFalse();
-    }
 }

@@ -65,7 +65,7 @@ public class CourseServiceTest {
     @Test
     public void shouldReturnAllOpenedCoursesGivenAUserEmailSecondPageAndTwoItemsAsLimit() {
 
-        String userEmail = "getabstract@mail.com";
+        String userId = "aedkhdahw232";
         LocalDateTime dateTime = LocalDateTime.now();
         CourseDto expectedCourseDto7Th = CourseDto.builder().id(7).name("Course 7th").description("Description")
                 .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
@@ -75,10 +75,10 @@ public class CourseServiceTest {
                 .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
-                .thenReturn(mockFindAllByStatusIn(userEmail));
+        when(userCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
+                .thenReturn(mockFindAllByStatusIn(userId));
 
-        List<CourseDto> courseDtoList = courseService.findOpenedCourses(userEmail, 1, 3);
+        List<CourseDto> courseDtoList = courseService.findOpenedCourses(userId, 1, 3);
 
         assertThat(courseDtoList.size()).isEqualTo(3);
         assertThat(courseDtoList.get(0)).isEqualToComparingFieldByField(expectedCourseDto7Th);
@@ -93,7 +93,7 @@ public class CourseServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
+        when(userCourseRepository.findAllByUserIdAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
                 .thenReturn(Collections.emptyList());
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
@@ -179,9 +179,9 @@ public class CourseServiceTest {
     private TraineeUserCourse buildTraineeUserCourse(int courseId, CourseStatus status) {
         return TraineeUserCourse.builder()
                 .status(status)
-                .traineeUserCoursePKey(TraineeUserCourseId.builder()
+                .pKey(TraineeUserCourseId.builder()
                         .course(Course.builder().id(courseId).build())
-                        .user(new User())
+                        .traineeUser(new User())
                         .build())
                 .build();
     }
@@ -204,17 +204,4 @@ public class CourseServiceTest {
 
         assertThat(courseDtoDetails).isEqualToComparingFieldByField(expectedCourseDto);
     }
-
-    @Test
-    public void shouldDeleteACourseGivenAOpenedCourseId() {
-        int courseId = 6;
-        ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
-
-        courseService.deleteCourse(courseId);
-
-        verify(userCourseRepository).deleteAllByCourseId(captor.capture());
-        verify(courseRepository).deleteById(captor.capture());
-        assertThat(captor.getAllValues()).contains(courseId);
-    }
-
 }

@@ -21,7 +21,7 @@ public class TraineeUserCourse implements Serializable {
 
     @EmbeddedId
     @NotNull
-    private TraineeUserCourseId traineeUserCoursePKey;
+    private TraineeUserCourseId pKey;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -33,12 +33,12 @@ public class TraineeUserCourse implements Serializable {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         TraineeUserCourse that = (TraineeUserCourse) o;
-        return Objects.equals(this.traineeUserCoursePKey, that.traineeUserCoursePKey);
+        return Objects.equals(this.pKey, that.pKey);
     }
 
     @Override
     public int hashCode() {
-        return this.traineeUserCoursePKey.hashCode();
+        return this.pKey.hashCode();
     }
 
 

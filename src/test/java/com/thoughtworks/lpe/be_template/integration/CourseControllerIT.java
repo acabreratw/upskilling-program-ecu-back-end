@@ -273,21 +273,4 @@ public class CourseControllerIT {
                 mapper.readValue(result.getResponse().getContentAsString(), ErrorResponse.class);
         assertThat(courseResource).isEqualToComparingFieldByField(expectedErrorResponse);
     }
-
-    @Test
-    public void shouldReturn200WhenCourseIsDeletedSuccessfully() throws Exception {
-
-        Integer courseId = 10;
-        RequestBuilder requestBuilder = delete("/api/v1/course/{id}", courseId)
-                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
-        verify(courseService).deleteCourse(argumentCaptor.capture());
-
-        assertThat(argumentCaptor.getValue()).isEqualToComparingFieldByField(courseId);
-        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(result.getResponse().getContentAsString()).isEqualTo("deleted successfully");
-    }
 }

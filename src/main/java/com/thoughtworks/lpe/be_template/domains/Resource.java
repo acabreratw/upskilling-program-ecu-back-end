@@ -41,7 +41,7 @@ public class Resource implements Serializable {
     @JoinColumn(referencedColumnName = "id", name = "course_id",nullable=false)
     private Course course;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private ResourceType type;
