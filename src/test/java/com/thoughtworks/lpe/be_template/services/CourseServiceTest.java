@@ -49,13 +49,17 @@ public class CourseServiceTest {
                 .name("Test course")
                 .build();
 
-        Course expectedCourse = new Course("Test course", "Description",
+        Course expectedCourse = new Course(1,"Test course", "Description",
                 "url", date, date);
 
         courseService.saveCourse(courseDto);
 
         verify(courseRepository).save(captor.capture());
-        assertThat(captor.getValue()).isEqualToComparingFieldByField(expectedCourse);
+
+        Course savedCourse = captor.getValue();
+        savedCourse.setId(1);
+
+        assertThat(savedCourse).isEqualToComparingFieldByField(expectedCourse);
     }
 
     @Test

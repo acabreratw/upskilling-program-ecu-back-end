@@ -15,7 +15,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Builder
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;

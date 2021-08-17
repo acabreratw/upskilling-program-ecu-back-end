@@ -16,7 +16,6 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class TraineeUserCourse implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -18,7 +18,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 @Builder
 public class Resource implements Serializable {
 
