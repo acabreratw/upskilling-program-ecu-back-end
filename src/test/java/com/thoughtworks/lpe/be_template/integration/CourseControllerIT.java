@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.thoughtworks.lpe.be_template.controllers.resources.ErrorResponse;
 import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.builders.CourseBuilder;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
 import com.thoughtworks.lpe.be_template.services.CourseService;
@@ -28,7 +26,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -64,22 +61,20 @@ public class CourseControllerIT {
     @Test
     public void shouldReturn200WhenCourseIsSavedSuccessfully() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString))
-                .withFreeStartDate(LocalDateTime.parse(dateString))
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto courseResource = CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString))
+                .freeStartDate(LocalDateTime.parse(dateString))
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto expectedCourseDto =  CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         RequestBuilder requestBuilder = post("/api/v1/course")
@@ -145,22 +140,20 @@ public class CourseControllerIT {
         LocalDateTime endDateTime = LocalDateTime.parse(LocalDateTime.now().plusDays(5).format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
         LocalDateTime startDateTime = LocalDateTime.parse(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
         
-        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(endDateTime)
-                .withFreeStartDate(startDateTime)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto courseResource = CourseDto.builder().description("Description")
+                .freeEndDate(endDateTime)
+                .freeStartDate(startDateTime)
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        Course expectedCourse = new CourseBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(endDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withFreeStartDate(LocalDateTime.parse(startDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        Course expectedCourse = Course.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(endDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .freeStartDate(LocalDateTime.parse(startDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         RequestBuilder requestBuilder = put("/api/v1/course")
@@ -182,22 +175,20 @@ public class CourseControllerIT {
     @Test
     public void shouldReturn404WhenCourseIdDoNotExist() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseDto courseResource = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString))
-                .withFreeStartDate(LocalDateTime.parse(dateString))
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto courseResource = CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString))
+                .freeStartDate(LocalDateTime.parse(dateString))
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
 
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto expectedCourseDto = CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
         RequestBuilder requestBuilder = put("/api/v1/course")
@@ -220,38 +211,38 @@ public class CourseControllerIT {
 
     private List<CourseDto> mockFindOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
-                new CourseDto("Course 8th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 8th", "Description", 
                         "Image url", dateTime, dateTime, 8),
-                new CourseDto("Course 9th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 9th", "Description", 
                         "Image url", dateTime, dateTime, 9));
     }
 
     private List<CourseDto> mockFindAllOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
-                new CourseDto("Course 3th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 3th", "Description", 
                         "Image url", dateTime, dateTime, 3),
-                new CourseDto("Course 4th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 4th", "Description", 
                         "Image url", dateTime, dateTime, 4),
-                new CourseDto("Course 6th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 6th", "Description", 
                         "Image url", dateTime, dateTime, 6),
-                new CourseDto("Course 7th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 7th", "Description", 
                         "Image url", dateTime, dateTime, 7),
-                new CourseDto("Course 8th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 8th", "Description", 
                         "Image url", dateTime, dateTime, 8),
-                new CourseDto("Course 9th", "Description", BigDecimal.TEN,
+                new CourseDto("Course 9th", "Description", 
                         "Image url", dateTime, dateTime, 9));
     }
 
     @Test
     public void shouldReturnCourseDetailsGivenCourseId() throws Exception {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString)).withFreeStartDate(LocalDateTime.parse(dateString)).withImageUrl("Image url")
-                .withName("Course 1th").withPrice(BigDecimal.TEN).withId(1).build();
-        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withFreeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .withImageUrl("Image url").withName("Course 1th").withPrice(BigDecimal.TEN).withId(1).build();
+        CourseDto expectedCourseDto = CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString)).freeStartDate(LocalDateTime.parse(dateString)).imageUrl("Image url")
+                .name("Course 1th").id(1).build();
+        CourseDto courseDto = CourseDto.builder().description("Description")
+                .freeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
+                .imageUrl("Image url").name("Course 1th").id(1).build();
         when(courseService.findCourseById(1)).thenReturn(courseDto);
         RequestBuilder requestBuilder = get("/api/v1/course/{id}", String.valueOf(1))
                 .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON);

@@ -1,13 +1,14 @@
 package com.thoughtworks.lpe.be_template.services;
 
 import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.UserCourse;
+import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
+import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
+import com.thoughtworks.lpe.be_template.domains.User;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.dtos.builders.CourseDtoBuilder;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.UserCourseRepository;
+import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class CourseServiceTest {
     private CourseRepository courseRepository;
 
     @Mock
-    private UserCourseRepository userCourseRepository;
+    private TraineeUserCourseRepository userCourseRepository;
 
     @InjectMocks
     private final CourseService courseService = new CourseService();
@@ -42,15 +42,14 @@ public class CourseServiceTest {
     public void shouldSaveGivenCourse() {
         LocalDateTime date = LocalDateTime.now();
         ArgumentCaptor<Course> captor = ArgumentCaptor.forClass(Course.class);
-        CourseDto courseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
+        CourseDto courseDto = CourseDto.builder().description("Description")
+                .freeEndDate(date)
+                .freeStartDate(date)
+                .imageUrl("url")
+                .name("Test course")
                 .build();
 
-        Course expectedCourse = new Course("Test course", "Description", BigDecimal.TEN,
+        Course expectedCourse = new Course("Test course", "Description",
                 "url", date, date);
 
         courseService.saveCourse(courseDto);
@@ -64,12 +63,12 @@ public class CourseServiceTest {
 
         String userEmail = "getabstract@mail.com";
         LocalDateTime dateTime = LocalDateTime.now();
-        CourseDto expectedCourseDto7Th = new CourseDtoBuilder().withId(7).withName("Course 7th").withDescription("Description")
-                .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
-        CourseDto expectedCourseDto8Th = new CourseDtoBuilder().withId(8).withName("Course 8th").withDescription("Description")
-                .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
-        CourseDto expectedCourseDto9Th = new CourseDtoBuilder().withId(9).withName("Course 9th").withDescription("Description")
-                .withFreeStartDate(dateTime).withFreeEndDate(dateTime).withImageUrl("Image url").withPrice(BigDecimal.TEN).build();
+        CourseDto expectedCourseDto7Th = CourseDto.builder().id(7).name("Course 7th").description("Description")
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
+        CourseDto expectedCourseDto8Th = CourseDto.builder().id(8).name("Course 8th").description("Description")
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
+        CourseDto expectedCourseDto9Th = CourseDto.builder().id(9).name("Course 9th").description("Description")
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
         when(userCourseRepository.findAllByUserEmailAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
@@ -103,22 +102,20 @@ public class CourseServiceTest {
         //Arrange
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto courseToUpdate = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
-                .withId(1)
+        CourseDto courseToUpdate = CourseDto.builder().description("Description")
+                .freeEndDate(date)
+                .freeStartDate(date)
+                .imageUrl("url")
+                .name("Test course")
+                .id(1)
                 .build();
 
-        Course updateCourse = CourseMapper.dtoToDomain(new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
-                .withId(1)
+        Course updateCourse = CourseMapper.dtoToDomain(CourseDto.builder().description("Description")
+                .freeEndDate(date)
+                .freeStartDate(date)
+                .imageUrl("url")
+                .name("Test course")
+                .id(1)
                 .build());
 
         when(courseRepository.findById(1)).thenReturn(Optional.of(updateCourse));
@@ -134,13 +131,12 @@ public class CourseServiceTest {
     public void shouldTrowEntityNotFoundExceptionWhenCourseNotExist() {
         LocalDateTime date = LocalDateTime.now();
 
-        CourseDto updateCourse = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("url")
-                .withName("Test course")
-                .withPrice(BigDecimal.TEN)
-                .withId(1)
+        CourseDto updateCourse = CourseDto.builder().description("Description")
+                .freeEndDate(date)
+                .freeStartDate(date)
+                .imageUrl("url")
+                .name("Test course")
+                .id(1)
                 .build();
 
         when(courseRepository.findById(1)).thenReturn(Optional.empty());
@@ -150,44 +146,53 @@ public class CourseServiceTest {
 
     private List<Course> mockFindAllCourses(LocalDateTime dateTime){
         return Arrays.asList(new Course(1,"Course 1th", "Description",
-                BigDecimal.TEN, "Image url", dateTime, dateTime),
+                "Image url", dateTime, dateTime),
                 new Course(2,"Course 2th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime),
                 new Course(3,"Course 3th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime),
                 new Course(4,"Course 4th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime),
                 new Course(5,"Course 5th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime),
                 new Course(6,"Course 6th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime),
                 new Course(7,"Course 7th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime),
                 new Course(8,"Course 8th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime),
                 new Course(9,"Course 9th", "Description",
-                        BigDecimal.TEN, "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime));
     }
 
-    private List<UserCourse> mockFindAllByStatusIn(String userEmail){
+    private List<TraineeUserCourse> mockFindAllByStatusIn(String userEmail){
         return Arrays.asList(
-                new UserCourse(1,CourseStatus.PRO, userEmail),
-                new UserCourse(2,CourseStatus.APR, userEmail),
-                new UserCourse(5,CourseStatus.PRO, userEmail));
+                 this.buildTraineeUserCourse(1, CourseStatus.PRO),
+                this.buildTraineeUserCourse(2, CourseStatus.APR),
+                this.buildTraineeUserCourse(5, CourseStatus.PRO));
+    }
+
+    private TraineeUserCourse buildTraineeUserCourse(int courseId, CourseStatus status) {
+        return TraineeUserCourse.builder()
+                .status(status)
+                .traineeUserCoursePKey(TraineeUserCourseId.builder()
+                        .course(Course.builder().id(courseId).build())
+                        .user(new User())
+                        .build())
+                .build();
     }
 
     @Test
     public void shouldReturnTheCourseDetailsGivenAnCourseId(){
         LocalDateTime date = LocalDateTime.now();
         Course course = new Course(1,"Course 1th", "Description",
-                BigDecimal.TEN, "Image url", date, date);
-        CourseDto expectedCourseDto = new CourseDtoBuilder().withDescription("Description")
-                .withFreeEndDate(date)
-                .withFreeStartDate(date)
-                .withImageUrl("Image url")
-                .withName("Course 1th")
-                .withPrice(BigDecimal.TEN)
-                .withId(1)
+                "Image url", date, date);
+        CourseDto expectedCourseDto = CourseDto.builder().description("Description")
+                .freeEndDate(date)
+                .freeStartDate(date)
+                .imageUrl("Image url")
+                .name("Course 1th")
+                .id(1)
                 .build();
         when(courseRepository.findById(1)).thenReturn(Optional.of(course));
 
