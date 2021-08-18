@@ -75,7 +75,7 @@ public class CourseServiceTest {
                 .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
+        when(userCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
                 .thenReturn(mockFindAllByStatusIn(userId));
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userId, 1, 3);
@@ -93,7 +93,7 @@ public class CourseServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserIdAndStatusIn(userEmail, Arrays.asList(CourseStatus.PRO, CourseStatus.APR)))
+        when(userCourseRepository.findAllByUserIdAndStatusIn(userEmail, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
                 .thenReturn(Collections.emptyList());
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
@@ -171,9 +171,9 @@ public class CourseServiceTest {
 
     private List<TraineeUserCourse> mockFindAllByStatusIn(String userEmail){
         return Arrays.asList(
-                 this.buildTraineeUserCourse(1, CourseStatus.PRO),
-                this.buildTraineeUserCourse(2, CourseStatus.APR),
-                this.buildTraineeUserCourse(5, CourseStatus.PRO));
+                 this.buildTraineeUserCourse(1, CourseStatus.IN_PROGRESS),
+                this.buildTraineeUserCourse(2, CourseStatus.PASSED),
+                this.buildTraineeUserCourse(5, CourseStatus.IN_PROGRESS));
     }
 
     private TraineeUserCourse buildTraineeUserCourse(int courseId, CourseStatus status) {

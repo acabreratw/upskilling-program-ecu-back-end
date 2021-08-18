@@ -3,11 +3,9 @@ package com.thoughtworks.lpe.be_template.domains;
 import com.sun.istack.NotNull;
 import com.thoughtworks.lpe.be_template.domains.enums.ResourceType;
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @Table(name = "resource", indexes = {
@@ -19,6 +17,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Builder
+@EqualsAndHashCode
 public class Resource implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,17 +45,4 @@ public class Resource implements Serializable {
     @NotNull
     private ResourceType type;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Resource resource = (Resource) o;
-
-        return Objects.equals(id, resource.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id.hashCode();
-    }
 }

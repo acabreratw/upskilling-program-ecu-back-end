@@ -1,12 +1,10 @@
 package com.thoughtworks.lpe.be_template.domains;
 
 import lombok.*;
-import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Entity
 @Table(name = "course")
@@ -16,6 +14,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Builder
+@EqualsAndHashCode
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -47,17 +46,4 @@ public class Course implements Serializable {
         this.freeEndDate = freeEndDate;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Course course = (Course) o;
-
-        return Objects.equals(id, course.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id.hashCode();
-    }
 }

@@ -63,7 +63,7 @@ public class CourseService {
     }
 
     private Predicate<Course> isAnOpenedCourseForTheUser(String userEmail) {
-        List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.PRO, CourseStatus.APR);
+        List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED);
         return courseDto -> !userCourseRepository.findAllByUserIdAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
                 .map(traineeUserCourse -> traineeUserCourse.getPKey().getCourse().getId())
                 .collect(Collectors.toList())

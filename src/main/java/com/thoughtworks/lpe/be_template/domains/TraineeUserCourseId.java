@@ -14,6 +14,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class TraineeUserCourseId implements Serializable {
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", name = "course_id")
