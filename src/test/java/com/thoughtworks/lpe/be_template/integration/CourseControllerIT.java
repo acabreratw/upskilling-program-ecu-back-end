@@ -94,6 +94,26 @@ public class CourseControllerIT {
     }
 
     @Test
+    public void shouldReturnAllCourses() throws Exception{
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        when(courseService.findAllCourses())
+                .thenReturn(mockFindAllCourses(dateTime));
+
+        RequestBuilder requestBuilder = get("/api/v1/course/allCourses")
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+
+        List<CourseDto> courseResourceList =
+                mapper.readerForListOf(CourseDto.class)
+                        .readValue(result.getResponse().getContentAsString());
+        assertThat(courseResourceList.size()).isEqualTo(9);
+
+    }
+
+    @Test
     public void shouldReturnOpenedCoursesGivenTheUserEmail() throws Exception {
 
         String userEmail = "getabstract@mail.com";
@@ -214,6 +234,22 @@ public class CourseControllerIT {
                 new CourseDto(8,"Course 8th", "Description",
                         "Image url", dateTime, dateTime),
                 new CourseDto(9,"Course 9th", "Description",
+                        "Image url", dateTime, dateTime));
+    }
+
+    private List<CourseDto> mockFindAllCourses(LocalDateTime dateTime){
+        return Arrays.asList(
+                new CourseDto(3, "Course 3th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(4, "Course 4th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(6, "Course 6th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(7, "Course 7th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(8, "Course 8th", "Description",
+                        "Image url", dateTime, dateTime),
+                new CourseDto(9, "Course 9th", "Description",
                         "Image url", dateTime, dateTime));
     }
 

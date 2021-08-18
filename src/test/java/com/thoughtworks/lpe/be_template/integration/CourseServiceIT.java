@@ -4,6 +4,7 @@ import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.services.CourseService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,14 @@ public class CourseServiceIT {
     private CourseService courseService;
     @Autowired
     private CourseRepository courseRepository;
+
+    @Test
+    public void shouldReturnAllCourses() throws Exception {
+
+        List<CourseDto> courseDtoList = courseService.findAllCourses();
+
+        assertThat(courseDtoList.size()).isEqualTo(9);
+    }
 
     @Test
     public void shouldReturnAllOpenedCoursesGivenAUserEmailSecondPageAndTwoItemsAsLimit() throws Exception {

@@ -63,6 +63,14 @@ public class CourseServiceTest {
     }
 
     @Test
+    public void shouldReturnAllCourses(){
+        LocalDateTime dateTime = LocalDateTime.now();
+        when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
+        List<CourseDto>  courseDtoList = courseService.findAllCourses();
+        assertThat(courseDtoList.size()).isEqualTo(9);
+    }
+
+    @Test
     public void shouldReturnAllOpenedCoursesGivenAUserEmailSecondPageAndTwoItemsAsLimit() {
 
         String userId = "aedkhdahw232";
