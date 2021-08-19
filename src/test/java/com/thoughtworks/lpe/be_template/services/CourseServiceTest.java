@@ -5,10 +5,13 @@ import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
 import com.thoughtworks.lpe.be_template.domains.User;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
+import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
+import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
+import com.thoughtworks.lpe.be_template.util.TestData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -18,10 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -33,10 +33,15 @@ public class CourseServiceTest {
     private CourseRepository courseRepository;
 
     @Mock
-    private TraineeUserCourseRepository userCourseRepository;
+    private TraineeUserCourseRepository traineeUserCourseRepository;
+
+    @Mock
+    private ResourceRepository resourceRepository;
 
     @InjectMocks
     private final CourseService courseService = new CourseService();
+
+    private final TestData testData = new TestData();
 
     @Test
     public void shouldSaveGivenCourse() {
@@ -75,7 +80,7 @@ public class CourseServiceTest {
                 .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
+        when(traineeUserCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
                 .thenReturn(mockFindAllByStatusIn(userId));
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userId, 1, 3);
@@ -93,7 +98,7 @@ public class CourseServiceTest {
         LocalDateTime dateTime = LocalDateTime.now();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
-        when(userCourseRepository.findAllByUserIdAndStatusIn(userEmail, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
+        when(traineeUserCourseRepository.findAllByUserIdAndStatusIn(userEmail, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
                 .thenReturn(Collections.emptyList());
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userEmail, 0, 10);
@@ -203,5 +208,77 @@ public class CourseServiceTest {
         CourseDto courseDtoDetails = courseService.findCourseById(1);
 
         assertThat(courseDtoDetails).isEqualToComparingFieldByField(expectedCourseDto);
+    }
+
+    @Test
+    public void shouldGetOpenCourseStatus() {
+        LocalDateTime courseStartDate = LocalDateTime.now().plusDays(3);
+        LocalDateTime courseEndDate = LocalDateTime.now().plusDays(33);
+        String expectedStatus = CourseStatus.OPEN.name();
+
+        String courseStatus = courseService.getCourseStatusByStartAndEndDate(courseStartDate, courseEndDate);
+
+        assertThat(courseStatus)
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo(expectedStatus);
+    }
+
+    @Test
+    public void shouldGetInProgressCourseStatus() {
+        LocalDateTime courseStartDate = LocalDateTime.now().minusDays(3);
+        LocalDateTime courseEndDate = LocalDateTime.now().plusDays(7);
+        String expectedStatus = CourseStatus.IN_PROGRESS.name();
+
+        String courseStatus = courseService.getCourseStatusByStartAndEndDate(courseStartDate, courseEndDate);
+
+        assertThat(courseStatus)
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo(expectedStatus);
+    }
+
+    @Test
+    public void shouldGetClosedCourseStatus() {
+        LocalDateTime courseStartDate = LocalDateTime.now().minusDays(3);
+        LocalDateTime courseEndDate = LocalDateTime.now().minusDays(1);
+        String expectedStatus = CourseStatus.CLOSED.name();
+
+        String courseStatus = courseService.getCourseStatusByStartAndEndDate(courseStartDate, courseEndDate);
+
+        assertThat(courseStatus)
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo(expectedStatus);
+    }
+
+    @Test
+    public void shouldGetOpenCourseDetailsWithUserNotEnrolledAndNoResources() {
+        final int COURSE_ID = 1;
+        final String USER_ID = "user_id";
+        final LocalDateTime COURSE_START_DATE = LocalDateTime.now().plusDays(3);
+        final LocalDateTime COURSE_END_DATE = LocalDateTime.now().plusDays(33);
+
+        CourseDetailDto expectedResponse = testData.getCourseDetailDTO();
+        expectedResponse.setResources(new HashSet<>());
+        expectedResponse.setEnrolled(false);
+        expectedResponse.setStatus(CourseStatus.OPEN.name());
+
+        Course courseFound = testData.getCourseWithFakeData();
+        courseFound.setId(COURSE_ID);
+        courseFound.setFreeStartDate(COURSE_START_DATE);
+        courseFound.setFreeEndDate(COURSE_END_DATE);
+
+        when(courseRepository.findById(COURSE_ID)).thenReturn(Optional.of(courseFound));
+        when(traineeUserCourseRepository.existsById(any(TraineeUserCourseId.class))).thenReturn(false);
+
+        CourseDetailDto actualResponse = courseService.getCourseDetails(COURSE_ID, USER_ID);
+
+        assertThat(actualResponse)
+                .isNotNull()
+                .isEqualToComparingFieldByField(expectedResponse);
+
+        verify(courseRepository).findById(COURSE_ID);
+        verify(traineeUserCourseRepository).existsById(any(TraineeUserCourseId.class));
     }
 }

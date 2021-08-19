@@ -1,9 +1,11 @@
 package com.thoughtworks.lpe.be_template.util;
 
+import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,15 +45,33 @@ public class TestData {
     }
 
     public TrainerDto getTrainerDTO() {
-        final String FAKE_TRAINER_ID = "6";
-        final String FAKE_TRAINER_DESCRIPTION = "This is a fake trainer description";
-        final String FAKE_TRAINER_NAME = "Fake Trainer Name";
+        final String FAKE_TRAINER_ID = "Mock_trainer_id";
+        final String FAKE_TRAINER_DESCRIPTION = "Best educator in the world. Won Nobel prize of Education in 2021";
+        final String FAKE_TRAINER_NAME = "John Doe";
+        final String FAKE_TRAINER_TITLE = "Best of the Best";
+        final String FAKE_TRAINER_IMAGE = "https://media.istockphoto.com/photos/portrait-of-smiling-professor-in-the-amphitheater-picture-id1128666909?k=6&m=1128666909&s=612x612&w=0&h=gwBz0Hi_DIhpcwrX64agp-iYbGGehPpRfuw6KnsRU8s=";
 
         return TrainerDto.builder()
                 .id(FAKE_TRAINER_ID)
                 .description(FAKE_TRAINER_DESCRIPTION)
                 .name(FAKE_TRAINER_NAME)
-                .image(FAKE_IMAGE_URL)
+                .image(FAKE_TRAINER_IMAGE)
+                .title(FAKE_TRAINER_TITLE)
+                .build();
+    }
+
+    public Course getCourseWithFakeData() {
+        final int FAKE_COURSE_ID = 1;
+        final String FAKE_COURSE_DESCRIPTION = "this is a course description";
+        final String FAKE_COURSE_NAME = "This Is a Course Title";
+
+        return Course.builder()
+                .id(FAKE_COURSE_ID)
+                .description(FAKE_COURSE_DESCRIPTION)
+                .freeStartDate(LocalDateTime.now())
+                .freeEndDate(LocalDateTime.now())
+                .imageUrl(FAKE_IMAGE_URL)
+                .name(FAKE_COURSE_NAME)
                 .build();
     }
 }
