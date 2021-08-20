@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class TokenInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserEnvironment userEnvironment;
+    private UserData userData;
 
     @Autowired
     private TokenDecoder tokenDecoder;
@@ -21,15 +21,11 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
 
-        userEnvironment.setUserData(new UserData());
-        String decode = tokenDecoder.getTokenPayload(request.getHeader("Authorization"));
-        UserData userData = UserData
-                .builder()
-                .id(tokenDecoder.getCustomPropertyFromToken(decode, "userId"))
-                .email(tokenDecoder.getCustomPropertyFromToken(decode, "email"))
-                .fullName(tokenDecoder.getCustomPropertyFromToken(decode, "name"))
-                .build();
-        userEnvironment.setUserData(userData);
+        String token = tokenDecoder.getTokenPayload(request.getHeader("Authorization"));
+
+        userData.setId(tokenDecoder.getCustomPropertyFromToken(token, "userId"));
+        userData.setEmail(tokenDecoder.getCustomPropertyFromToken(token, "email"));
+        userData.setFullName(tokenDecoder.getCustomPropertyFromToken(token, "name"));
 
         return true;
     }

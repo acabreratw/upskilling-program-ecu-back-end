@@ -2,8 +2,8 @@ package com.thoughtworks.lpe.be_template.controllers;
 
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
-import com.thoughtworks.lpe.be_template.security.UserEnvironment;
 import com.thoughtworks.lpe.be_template.services.CourseService;
+import com.thoughtworks.lpe.be_template.util.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class CourseController {
     private CourseMapper courseMapper;
 
     @Autowired
-    private UserEnvironment userEnvironment;
+    private UserData userData;
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseDto courseDto) {

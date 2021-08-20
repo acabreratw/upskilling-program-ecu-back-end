@@ -1,5 +1,6 @@
 package com.thoughtworks.lpe.be_template.security;
 
+import com.thoughtworks.lpe.be_template.util.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -104,7 +105,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter implements WebMvcC
 
     @Bean
     @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS )
-    public UserEnvironment userEnvironment() {
-        return UserEnvironment.builder().build();
+    public UserData userData() {
+        return UserData.builder().build();
     }
 }
