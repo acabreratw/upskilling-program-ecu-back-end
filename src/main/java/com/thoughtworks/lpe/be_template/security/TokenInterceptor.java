@@ -1,6 +1,6 @@
 package com.thoughtworks.lpe.be_template.security;
 
-import com.thoughtworks.lpe.be_template.config.UserData;
+import com.thoughtworks.lpe.be_template.util.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

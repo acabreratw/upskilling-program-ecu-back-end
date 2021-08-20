@@ -1,4 +1,4 @@
-package com.thoughtworks.lpe.be_template.config;
+package com.thoughtworks.lpe.be_template.util;
 
 import lombok.*;
 
