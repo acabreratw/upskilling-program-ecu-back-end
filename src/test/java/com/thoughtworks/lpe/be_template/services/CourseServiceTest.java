@@ -9,6 +9,7 @@ import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
+import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
@@ -278,8 +279,19 @@ public class CourseServiceTest {
         final LocalDateTime COURSE_END_DATE = LocalDateTime.now().plusDays(33);
         final String USER_ID = "1298428321231";
 
+        Set<ResourceDto> resources = new HashSet<>();
+
+        for (int i = 0; i < 4; i++) {
+            resources.add(ResourceDto.builder()
+                    .image("https://www.freeiconspng.com/uploads/video-play-icon-1.jpg")
+                    .title("Video " + ( i + 1))
+                    .content("Here we're going to see an introduction to the topic.")
+                    .id((long)i)
+                    .build());
+        }
+
         CourseDetailDto expectedResponse = testData.getCourseDetailDTO();
-        expectedResponse.setResources(new HashSet<>());
+        expectedResponse.setResources(resources);
         expectedResponse.setEnrolled(false);
         expectedResponse.setStatus(CourseStatus.OPEN.name());
 

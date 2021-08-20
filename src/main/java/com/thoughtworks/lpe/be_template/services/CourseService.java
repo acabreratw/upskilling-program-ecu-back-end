@@ -7,6 +7,7 @@ import com.thoughtworks.lpe.be_template.domains.User;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
+import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
@@ -19,10 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -126,11 +124,23 @@ public class CourseService {
         final String FAKE_TRAINER_TITLE = "Best of the Best";
         final String FAKE_TRAINER_IMAGE = "https://media.istockphoto.com/photos/portrait-of-smiling-professor-in-the-amphitheater-picture-id1128666909?k=6&m=1128666909&s=612x612&w=0&h=gwBz0Hi_DIhpcwrX64agp-iYbGGehPpRfuw6KnsRU8s=";
 
+        //TODO: Query resources and add them here
+        Set<ResourceDto> resources = new HashSet<>();
+
+        for (int i = 0; i < 4; i++) {
+            resources.add(ResourceDto.builder()
+                    .image("https://www.freeiconspng.com/uploads/video-play-icon-1.jpg")
+                    .title("Video " + ( i + 1))
+                    .content("Here we're going to see an introduction to the topic.")
+                    .id((long)i)
+                    .build());
+        }
+
         return CourseDetailDto.builder()
                 .id(actualCourse.getId())
                 .title(actualCourse.getName())
                 .description(actualCourse.getDescription())
-                .resources(new HashSet<>()) //TODO: Query resources and add them here
+                .resources(resources)
                 .trainer(TrainerDto.builder()
                         .id(FAKE_TRAINER_ID)
                         .name(FAKE_TRAINER_NAME)
