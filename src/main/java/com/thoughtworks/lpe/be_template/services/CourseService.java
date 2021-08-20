@@ -1,5 +1,6 @@
 package com.thoughtworks.lpe.be_template.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
 import com.thoughtworks.lpe.be_template.domains.User;
@@ -11,6 +12,8 @@ import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
+import com.thoughtworks.lpe.be_template.repositories.UserRepository;
+import com.thoughtworks.lpe.be_template.security.TokenDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +36,12 @@ public class CourseService {
 
     @Autowired
     private TraineeUserCourseRepository traineeUserCourseRepository;
+
+    @Autowired
+    private TokenDecoder decoder;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public void saveCourse(CourseDto courseDto) {
         courseRepository.save(CourseMapper.dtoToDomain(courseDto));
@@ -80,19 +89,26 @@ public class CourseService {
         return new LogicBusinessException(INVALID_COURSE_ID);
     }
 
-    public CourseDetailDto getCourseDetails(int courseId, String accessToken) {
+    public CourseDetailDto getCourseDetails(int courseId, String accessToken) throws JsonProcessingException {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
-        if (!optionalCourse.isPresent()) {
+        if (optionalCourse.isEmpty()) {
             //TODO: Make a more suitable exception handling
             throw new RuntimeException(String.format("Could not find any Course with id %s", courseId));
         }
 
         Course actualCourse = optionalCourse.get();
 
+        String payload = decoder.getTokenPayload(accessToken);
+        String userId = decoder.getCustomPropertyFromToken(payload, "userId");
+        Optional<User> optionalTraineeUser = userRepository.findById(userId);
 
-        //TODO: Replace this with access token decryption and user query
-        User traineeUser = new User();
+        if (optionalTraineeUser.isEmpty()) {
+            //TODO: Make a more suitable exception handling
+            throw new RuntimeException("User not found!");
+        }
+
+        User traineeUser = optionalTraineeUser.get();
 
         String courseStatus = this.getCourseStatusByStartAndEndDate(actualCourse.getFreeStartDate(), actualCourse.getFreeEndDate());
 

@@ -1,5 +1,7 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.services.CourseService;
@@ -55,6 +57,12 @@ public class CourseController {
     public ResponseEntity<String> updateCourse(@RequestBody CourseDto courseDto) {
         courseService.updateCourse(courseDto);
         return ResponseEntity.ok("updated successfully");
+    }
+
+    @GetMapping(path = "/courseDetails/{courseId}")
+    public ResponseEntity<CourseDetailDto> getCourseDetails(@RequestHeader("Authorization") String token,
+                                                            @PathVariable("courseId") Integer courseId) throws JsonProcessingException {
+        return ResponseEntity.ok(courseService.getCourseDetails(courseId, token));
     }
 
 }

@@ -1,16 +1,20 @@
 package com.thoughtworks.lpe.be_template.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.domains.Course;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
 import com.thoughtworks.lpe.be_template.domains.User;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
+import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
+import com.thoughtworks.lpe.be_template.repositories.UserRepository;
+import com.thoughtworks.lpe.be_template.security.TokenDecoder;
 import com.thoughtworks.lpe.be_template.util.TestData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +38,12 @@ public class CourseServiceTest {
 
     @Mock
     private TraineeUserCourseRepository traineeUserCourseRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private TokenDecoder decoder;
 
     @Mock
     private ResourceRepository resourceRepository;
@@ -261,11 +271,12 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void shouldGetOpenCourseDetailsWithUserNotEnrolledAndNoResources() {
+    public void shouldGetOpenCourseDetailsWithUserNotEnrolledAndNoResources() throws JsonProcessingException {
         final int COURSE_ID = 1;
-        final String USER_ID = "user_id";
+        final String USER_TOKEN = "someUserToken";
         final LocalDateTime COURSE_START_DATE = LocalDateTime.now().plusDays(3);
         final LocalDateTime COURSE_END_DATE = LocalDateTime.now().plusDays(33);
+        final String USER_ID = "1298428321231";
 
         CourseDetailDto expectedResponse = testData.getCourseDetailDTO();
         expectedResponse.setResources(new HashSet<>());
@@ -277,16 +288,24 @@ public class CourseServiceTest {
         courseFound.setFreeStartDate(COURSE_START_DATE);
         courseFound.setFreeEndDate(COURSE_END_DATE);
 
+        User foundUser = testData.getUser(UserType.TRAINEE);
+
         when(courseRepository.findById(COURSE_ID)).thenReturn(Optional.of(courseFound));
         when(traineeUserCourseRepository.existsById(any(TraineeUserCourseId.class))).thenReturn(false);
+        when(decoder.getTokenPayload(anyString())).thenReturn("fakePayload");
+        when(decoder.getCustomPropertyFromToken(anyString(), eq("userId"))).thenReturn(USER_ID);
+        when(userRepository.findById(anyString())).thenReturn(Optional.of(foundUser));
 
-        CourseDetailDto actualResponse = courseService.getCourseDetails(COURSE_ID, USER_ID);
+        CourseDetailDto actualResponse = courseService.getCourseDetails(COURSE_ID, USER_TOKEN);
 
         assertThat(actualResponse)
                 .isNotNull()
                 .isEqualToComparingFieldByField(expectedResponse);
 
         verify(courseRepository).findById(COURSE_ID);
+        verify(decoder).getTokenPayload(anyString());
+        verify(decoder).getCustomPropertyFromToken(anyString(), eq("userId"));
+        verify(userRepository).findById(anyString());
         verify(traineeUserCourseRepository).existsById(any(TraineeUserCourseId.class));
     }
 }

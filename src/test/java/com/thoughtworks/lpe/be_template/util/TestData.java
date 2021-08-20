@@ -1,6 +1,8 @@
 package com.thoughtworks.lpe.be_template.util;
 
 import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.User;
+import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
@@ -72,6 +74,15 @@ public class TestData {
                 .freeEndDate(LocalDateTime.now())
                 .imageUrl(FAKE_IMAGE_URL)
                 .name(FAKE_COURSE_NAME)
+                .build();
+    }
+
+    public User getUser(UserType userType) {
+        return User.builder()
+                .id("1231424231")
+                .email("somemail@somedomain.com")
+                .type(userType)
+                .name("Some Name")
                 .build();
     }
 }
