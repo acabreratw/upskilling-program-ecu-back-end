@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
+import com.thoughtworks.lpe.be_template.security.UserEnvironment;
 import com.thoughtworks.lpe.be_template.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class CourseController {
 
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private UserEnvironment userEnvironment;
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseDto courseDto) {
