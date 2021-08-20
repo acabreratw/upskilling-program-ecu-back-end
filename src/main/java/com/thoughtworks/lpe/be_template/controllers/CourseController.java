@@ -1,6 +1,5 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
-import com.thoughtworks.lpe.be_template.config.UserData;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.security.UserEnvironment;
@@ -61,11 +60,4 @@ public class CourseController {
         courseService.updateCourse(courseDto);
         return ResponseEntity.ok("updated successfully");
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
-        System.out.println(userEnvironment.getUserData().getId());
-        return ResponseEntity.ok("ok");
-    }
-
 }
