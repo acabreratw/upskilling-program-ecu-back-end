@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.INVALID_COURSE_ID;
+import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.USER_NOT_FOUND;
 
 @Service
 public class CourseService {
@@ -91,8 +92,7 @@ public class CourseService {
         Optional<Course> optionalCourse = courseRepository.findById(courseId);
 
         if (optionalCourse.isEmpty()) {
-            //TODO: Make a more suitable exception handling
-            throw new RuntimeException(String.format("Could not find any Course with id %s", courseId));
+            throw new LogicBusinessException(INVALID_COURSE_ID);
         }
 
         Course actualCourse = optionalCourse.get();
@@ -102,8 +102,7 @@ public class CourseService {
         Optional<User> optionalTraineeUser = userRepository.findById(userId);
 
         if (optionalTraineeUser.isEmpty()) {
-            //TODO: Make a more suitable exception handling
-            throw new RuntimeException("User not found!");
+            throw new LogicBusinessException(USER_NOT_FOUND);
         }
 
         User traineeUser = optionalTraineeUser.get();

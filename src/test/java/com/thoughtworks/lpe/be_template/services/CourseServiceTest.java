@@ -10,6 +10,8 @@ import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
+import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
+import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
@@ -18,6 +20,7 @@ import com.thoughtworks.lpe.be_template.repositories.UserRepository;
 import com.thoughtworks.lpe.be_template.security.TokenDecoder;
 import com.thoughtworks.lpe.be_template.util.TestData;
 import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -269,6 +272,67 @@ public class CourseServiceTest {
                 .isNotNull()
                 .isNotBlank()
                 .isEqualTo(expectedStatus);
+    }
+
+    @Test
+    public void shouldThrowExceptionGettingCourseDetailsWhenCourseIsNotFound() throws JsonProcessingException {
+        final int COURSE_ID = 100;
+        final String ACCESS_TOKEN = "someValidAccessToken";
+
+        when(courseRepository.findById(anyInt())).thenReturn(Optional.empty());
+
+        LogicBusinessException exception = Assertions.assertThrows(LogicBusinessException.class,
+                ()-> courseService.getCourseDetails(COURSE_ID, ACCESS_TOKEN));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception.getError()).isEqualTo(Error.INVALID_COURSE_ID);
+        assertThat(exception.getError().getCode())
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo("003");
+        assertThat(exception.getError().getUserMessage())
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo("Course id is invalid");
+
+        verify(courseRepository).findById(anyInt());
+        verify(decoder, never()).getTokenPayload(anyString());
+        verify(decoder, never()).getCustomPropertyFromToken(anyString(), anyString());
+        verify(userRepository, never()).findById(anyString());
+    }
+
+    @Test
+    public void shouldThrowExceptionGettingCourseDetailsWhenUserIsNotFound() throws JsonProcessingException {
+        final int COURSE_ID = 99;
+        final String ACCESS_TOKEN = "someValidAccessTokenWithUserIdNotRegistered";
+        final Course courseFound = testData.getCourseWithFakeData();
+        final String TOKEN_PAYLOAD = "someTokenPayload";
+        final String CUSTOM_PROPERTY_FROM_TOKEN = "userId";
+        final String USER_ID = "00192833992";
+
+        when(courseRepository.findById(anyInt())).thenReturn(Optional.of(courseFound));
+        when(decoder.getTokenPayload(anyString())).thenReturn(TOKEN_PAYLOAD);
+        when(decoder.getCustomPropertyFromToken(TOKEN_PAYLOAD, CUSTOM_PROPERTY_FROM_TOKEN)).thenReturn(USER_ID);
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+
+        LogicBusinessException exception = Assertions.assertThrows(LogicBusinessException.class,
+                ()-> courseService.getCourseDetails(COURSE_ID, ACCESS_TOKEN));
+
+        assertThat(exception).isNotNull();
+        assertThat(exception.getError()).isEqualTo(Error.USER_NOT_FOUND);
+        assertThat(exception.getError().getCode())
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo("010");
+        assertThat(exception.getError().getUserMessage())
+                .isNotNull()
+                .isNotBlank()
+                .isEqualTo("User could not be found.");
+
+        verify(courseRepository).findById(anyInt());
+        verify(decoder).getTokenPayload(anyString());
+        verify(decoder).getCustomPropertyFromToken(TOKEN_PAYLOAD, CUSTOM_PROPERTY_FROM_TOKEN);
+        verify(userRepository).findById(USER_ID);
     }
 
     @Test
