@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
-import com.thoughtworks.lpe.be_template.security.UserEnvironment;
 import com.thoughtworks.lpe.be_template.services.CourseService;
 import com.thoughtworks.lpe.be_template.util.UserData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ public class CourseController {
 
     @Autowired
     private CourseMapper courseMapper;
-
-    @Autowired
-    private UserEnvironment userEnvironment;
 
     @Autowired
     private UserData userData;
