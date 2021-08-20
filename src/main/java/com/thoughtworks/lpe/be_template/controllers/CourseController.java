@@ -1,7 +1,9 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
+import com.thoughtworks.lpe.be_template.config.UserData;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
+import com.thoughtworks.lpe.be_template.security.UserEnvironment;
 import com.thoughtworks.lpe.be_template.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,9 @@ public class CourseController {
 
     @Autowired
     private CourseMapper courseMapper;
+
+    @Autowired
+    private UserEnvironment userEnvironment;
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseDto courseDto) {
@@ -55,6 +60,12 @@ public class CourseController {
     public ResponseEntity<String> updateCourse(@RequestBody CourseDto courseDto) {
         courseService.updateCourse(courseDto);
         return ResponseEntity.ok("updated successfully");
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        System.out.println(userEnvironment.getUserData().getId());
+        return ResponseEntity.ok("ok");
     }
 
 }

@@ -1,5 +1,7 @@
 package com.thoughtworks.lpe.be_template.security;
 
+import com.thoughtworks.lpe.be_template.config.UserData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
