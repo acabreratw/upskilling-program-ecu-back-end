@@ -4,9 +4,9 @@ import com.thoughtworks.lpe.be_template.domains.Resource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import java.util.Set;
 
 @Repository
 public interface ResourceRepository extends JpaRepository<Resource, Integer> {
-    Collection<Resource> findAllByCourseId(Integer courseId);
+    Set<Resource> findAllByCourseId(Integer courseId);
 }

@@ -8,9 +8,7 @@ import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 
 public class TestData {
     private final String FAKE_IMAGE_URL = "this_is_some_image_url_.png";
@@ -26,7 +24,7 @@ public class TestData {
                 .description(FAKE_COURSE_DESCRIPTION)
                 .enrolled(false)
                 .image(FAKE_IMAGE_URL)
-                .resources(Collections.unmodifiableSet(new HashSet<>(Arrays.asList(getResourceDTO(), getResourceDTO()))))
+                .resources(Collections.singleton(getResourceDTO()))
                 .status(FAKE_COURSE_STATUS)
                 .title(FAKE_COURSE_TITLE)
                 .trainer(this.getTrainerDTO())

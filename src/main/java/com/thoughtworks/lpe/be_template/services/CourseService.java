@@ -2,6 +2,7 @@ package com.thoughtworks.lpe.be_template.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.Resource;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
 import com.thoughtworks.lpe.be_template.domains.User;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
@@ -12,6 +13,7 @@ import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
+import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.UserRepository;
 import com.thoughtworks.lpe.be_template.security.TokenDecoder;
@@ -41,6 +43,9 @@ public class CourseService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ResourceRepository resourceRepository;
 
     public void saveCourse(CourseDto courseDto) {
         courseRepository.save(CourseMapper.dtoToDomain(courseDto));
@@ -123,16 +128,18 @@ public class CourseService {
         final String FAKE_TRAINER_TITLE = "Best of the Best";
         final String FAKE_TRAINER_IMAGE = "https://media.istockphoto.com/photos/portrait-of-smiling-professor-in-the-amphitheater-picture-id1128666909?k=6&m=1128666909&s=612x612&w=0&h=gwBz0Hi_DIhpcwrX64agp-iYbGGehPpRfuw6KnsRU8s=";
 
-        //TODO: Query resources and add them here
         Set<ResourceDto> resources = new HashSet<>();
+        Set<Resource> resourcesFound= resourceRepository.findAllByCourseId(courseId);
 
-        for (int i = 0; i < 4; i++) {
-            resources.add(ResourceDto.builder()
-                    .image("https://www.freeiconspng.com/uploads/video-play-icon-1.jpg")
-                    .title("Video " + ( i + 1))
-                    .content("Here we're going to see an introduction to the topic.")
-                    .id((long)i)
-                    .build());
+        if (!resourcesFound.isEmpty()) {
+            for (Resource resource : resourcesFound) {
+                resources.add(ResourceDto.builder()
+                        .image(resource.getImage())
+                        .title(resource.getTitle())
+                        .content(resource.getContent())
+                        .id(resource.getId().longValue())
+                        .build());
+            }
         }
 
         return CourseDetailDto.builder()

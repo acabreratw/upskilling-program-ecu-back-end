@@ -45,4 +45,6 @@ public class Resource implements Serializable {
     @NotNull
     private ResourceType type;
 
+    private String image;
+
 }

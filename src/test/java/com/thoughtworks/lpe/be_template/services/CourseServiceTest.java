@@ -1,10 +1,7 @@
 package com.thoughtworks.lpe.be_template.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
-import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
-import com.thoughtworks.lpe.be_template.domains.User;
+import com.thoughtworks.lpe.be_template.domains.*;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
@@ -57,6 +54,12 @@ public class CourseServiceTest {
 
     private final TestData testData = new TestData();
 
+    private int courseId = 1;
+    private final String userToken = "someUserToken";
+    private final LocalDateTime courseStartDate = LocalDateTime.now().plusDays(3);
+    private final LocalDateTime courseEndDate = LocalDateTime.now().plusDays(33);
+    private String userId = "1298428321231";
+
     @Test
     public void shouldSaveGivenCourse() {
         LocalDateTime date = LocalDateTime.now();
@@ -103,7 +106,7 @@ public class CourseServiceTest {
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
         when(traineeUserCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
-                .thenReturn(mockFindAllByStatusIn(userId));
+                .thenReturn(mockFindAllByStatusIn());
 
         List<CourseDto> courseDtoList = courseService.findOpenedCourses(userId, 1, 3);
 
@@ -114,7 +117,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void shouldReturnAllOpenedCoursesGivenAUserEmailOfAUserWithoutSubscribedCourses() throws Exception {
+    public void shouldReturnAllOpenedCoursesGivenAUserEmailOfAUserWithoutSubscribedCourses() {
 
         String userEmail = "user-without-courses@mail.com";
         LocalDateTime dateTime = LocalDateTime.now();
@@ -196,7 +199,7 @@ public class CourseServiceTest {
                         "Image url", dateTime, dateTime));
     }
 
-    private List<TraineeUserCourse> mockFindAllByStatusIn(String userEmail){
+    private List<TraineeUserCourse> mockFindAllByStatusIn(){
         return Arrays.asList(
                  this.buildTraineeUserCourse(1, CourseStatus.IN_PROGRESS),
                 this.buildTraineeUserCourse(2, CourseStatus.PASSED),
@@ -303,20 +306,20 @@ public class CourseServiceTest {
 
     @Test
     public void shouldThrowExceptionGettingCourseDetailsWhenUserIsNotFound() throws JsonProcessingException {
-        final int COURSE_ID = 99;
+        courseId = 99;
         final String ACCESS_TOKEN = "someValidAccessTokenWithUserIdNotRegistered";
         final Course courseFound = testData.getCourseWithFakeData();
         final String TOKEN_PAYLOAD = "someTokenPayload";
         final String CUSTOM_PROPERTY_FROM_TOKEN = "userId";
-        final String USER_ID = "00192833992";
+        userId = "00192833992";
 
         when(courseRepository.findById(anyInt())).thenReturn(Optional.of(courseFound));
         when(decoder.getTokenPayload(anyString())).thenReturn(TOKEN_PAYLOAD);
-        when(decoder.getCustomPropertyFromToken(TOKEN_PAYLOAD, CUSTOM_PROPERTY_FROM_TOKEN)).thenReturn(USER_ID);
-        when(userRepository.findById(USER_ID)).thenReturn(Optional.empty());
+        when(decoder.getCustomPropertyFromToken(TOKEN_PAYLOAD, CUSTOM_PROPERTY_FROM_TOKEN)).thenReturn(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         LogicBusinessException exception = Assertions.assertThrows(LogicBusinessException.class,
-                ()-> courseService.getCourseDetails(COURSE_ID, ACCESS_TOKEN));
+                ()-> courseService.getCourseDetails(courseId, ACCESS_TOKEN));
 
         assertThat(exception).isNotNull();
         assertThat(exception.getError()).isEqualTo(Error.USER_NOT_FOUND);
@@ -332,27 +335,48 @@ public class CourseServiceTest {
         verify(courseRepository).findById(anyInt());
         verify(decoder).getTokenPayload(anyString());
         verify(decoder).getCustomPropertyFromToken(TOKEN_PAYLOAD, CUSTOM_PROPERTY_FROM_TOKEN);
-        verify(userRepository).findById(USER_ID);
+        verify(userRepository).findById(userId);
     }
 
     @Test
     public void shouldGetOpenCourseDetailsWithUserNotEnrolledAndNoResources() throws JsonProcessingException {
-        final int COURSE_ID = 1;
-        final String USER_TOKEN = "someUserToken";
-        final LocalDateTime COURSE_START_DATE = LocalDateTime.now().plusDays(3);
-        final LocalDateTime COURSE_END_DATE = LocalDateTime.now().plusDays(33);
-        final String USER_ID = "1298428321231";
+        CourseDetailDto expectedResponse = testData.getCourseDetailDTO();
+        expectedResponse.setResources(Collections.emptySet());
+        expectedResponse.setEnrolled(false);
+        expectedResponse.setStatus(CourseStatus.OPEN.name());
 
+        Course courseFound = testData.getCourseWithFakeData();
+        courseFound.setId(courseId);
+        courseFound.setFreeStartDate(courseStartDate);
+        courseFound.setFreeEndDate(courseEndDate);
+
+        User foundUser = testData.getUser(UserType.TRAINEE);
+
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(courseFound));
+        when(traineeUserCourseRepository.existsById(any(TraineeUserCourseId.class))).thenReturn(false);
+        when(decoder.getTokenPayload(anyString())).thenReturn("fakePayload");
+        when(decoder.getCustomPropertyFromToken(anyString(), eq("userId"))).thenReturn(userId);
+        when(userRepository.findById(anyString())).thenReturn(Optional.of(foundUser));
+        when(resourceRepository.findAllByCourseId(anyInt())).thenReturn(Collections.emptySet());
+
+        CourseDetailDto actualResponse = courseService.getCourseDetails(courseId, userToken);
+
+        assertThat(actualResponse)
+                .isNotNull()
+                .isEqualToComparingFieldByField(expectedResponse);
+
+        verify(courseRepository).findById(courseId);
+        verify(decoder).getTokenPayload(anyString());
+        verify(decoder).getCustomPropertyFromToken(anyString(), eq("userId"));
+        verify(userRepository).findById(anyString());
+        verify(traineeUserCourseRepository).existsById(any(TraineeUserCourseId.class));
+        verify(resourceRepository).findAllByCourseId(anyInt());
+    }
+
+    @Test
+    public void shouldGetOpenCourseDetailsWithUserNotEnrolledAndResources() throws JsonProcessingException {
         Set<ResourceDto> resources = new HashSet<>();
-
-        for (int i = 0; i < 4; i++) {
-            resources.add(ResourceDto.builder()
-                    .image("https://www.freeiconspng.com/uploads/video-play-icon-1.jpg")
-                    .title("Video " + ( i + 1))
-                    .content("Here we're going to see an introduction to the topic.")
-                    .id((long)i)
-                    .build());
-        }
+        Set<Resource> resourcesFound = new HashSet<>();
 
         CourseDetailDto expectedResponse = testData.getCourseDetailDTO();
         expectedResponse.setResources(resources);
@@ -360,28 +384,51 @@ public class CourseServiceTest {
         expectedResponse.setStatus(CourseStatus.OPEN.name());
 
         Course courseFound = testData.getCourseWithFakeData();
-        courseFound.setId(COURSE_ID);
-        courseFound.setFreeStartDate(COURSE_START_DATE);
-        courseFound.setFreeEndDate(COURSE_END_DATE);
+        courseFound.setId(courseId);
+        courseFound.setFreeStartDate(courseStartDate);
+        courseFound.setFreeEndDate(courseEndDate);
+
+        for (int i = 0; i < 4; i++) {
+            String FAKE_RESOURCE_IMAGE_URL = "https://www.freeiconspng.com/uploads/video-play-icon-1.jpg";
+            String FAKE_RESOURCE_CONTENT = "Here we're going to see an introduction to the topic.";
+            String FAKE_RESOURCE_TITLE = "Resource ";
+
+            resources.add(ResourceDto.builder()
+                    .image(FAKE_RESOURCE_IMAGE_URL)
+                    .title(FAKE_RESOURCE_TITLE + i)
+                    .content(FAKE_RESOURCE_CONTENT)
+                    .id((long)i)
+                    .build());
+
+            resourcesFound.add(Resource.builder()
+                    .id(i)
+                    .title(FAKE_RESOURCE_TITLE)
+                    .content(FAKE_RESOURCE_CONTENT)
+                    .image(FAKE_RESOURCE_IMAGE_URL)
+                    .course(courseFound)
+                    .build());
+        }
 
         User foundUser = testData.getUser(UserType.TRAINEE);
 
-        when(courseRepository.findById(COURSE_ID)).thenReturn(Optional.of(courseFound));
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(courseFound));
         when(traineeUserCourseRepository.existsById(any(TraineeUserCourseId.class))).thenReturn(false);
         when(decoder.getTokenPayload(anyString())).thenReturn("fakePayload");
-        when(decoder.getCustomPropertyFromToken(anyString(), eq("userId"))).thenReturn(USER_ID);
+        when(decoder.getCustomPropertyFromToken(anyString(), eq("userId"))).thenReturn(userId);
         when(userRepository.findById(anyString())).thenReturn(Optional.of(foundUser));
+        when(resourceRepository.findAllByCourseId(anyInt())).thenReturn(resourcesFound);
 
-        CourseDetailDto actualResponse = courseService.getCourseDetails(COURSE_ID, USER_TOKEN);
+        CourseDetailDto actualResponse = courseService.getCourseDetails(courseId, userToken);
 
         assertThat(actualResponse)
                 .isNotNull()
                 .isEqualToComparingFieldByField(expectedResponse);
 
-        verify(courseRepository).findById(COURSE_ID);
+        verify(courseRepository).findById(courseId);
         verify(decoder).getTokenPayload(anyString());
         verify(decoder).getCustomPropertyFromToken(anyString(), eq("userId"));
         verify(userRepository).findById(anyString());
         verify(traineeUserCourseRepository).existsById(any(TraineeUserCourseId.class));
+        verify(resourceRepository).findAllByCourseId(anyInt());
     }
 }
