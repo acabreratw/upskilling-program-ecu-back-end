@@ -12,7 +12,7 @@ jobs:
       - image: docker:stable
     steps:
       - run:
-          command: echo "here goes your tests steps 1"
+          command: echo "here goes your tests steps"
 
 workflows:
   version: 2
