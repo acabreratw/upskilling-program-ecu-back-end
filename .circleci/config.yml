@@ -7,15 +7,18 @@ orbs:
 workflows:
   build-and-deploy:
     jobs:
-      - build:
+      - aws-ecr/build-and-push-image:
           filters:
             branches:
               only:
                 - main
-      - aws-ecr/build-and-push-image:
           repo: "${AWS_RESOURCE_NAME_PREFIX}"
           tag: "${CIRCLE_SHA1}"
       - aws-ecs/deploy-service-update:
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
           family: "${AWS_RESOURCE_NAME_PREFIX}-td"
