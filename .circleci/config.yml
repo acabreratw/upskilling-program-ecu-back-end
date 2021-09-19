@@ -1,24 +1,51 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: docker:stable
-    steps:
-      - run:
-          command: echo "here goes your build steps"
+version: 2.1
 
-  tests:
-    docker:
-      - image: docker:stable
-    steps:
-      - run:
-          command: echo "here goes your tests steps"
+orbs:
+  aws-ecr: circleci/aws-ecr@7.2.0
+  aws-ecs: circleci/aws-ecs@02.2.1
 
 workflows:
-  version: 2
-  build-test-deploy:
+  build-and-deploy:
     jobs:
-      - build
-      - tests:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - aws-ecr/build-and-push-image:
+          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+      - aws-ecs/deploy-service-update:
           requires:
-            - build
+            - aws-ecr/build-and-push-image # only run this job once aws-ecr/build-and-push-image has completed
+          family: "${AWS_RESOURCE_NAME_PREFIX}-td"
+          service-name: "${AWS_RESOURCE_NAME_PREFIX}-service"
+          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-ecs-fargate"
+          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,tag=${CIRCLE_SHA1}"
+          container-env-var-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_AUDIENCE,value=${AUTH0_AUDIENCE},
+          name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI}"
+
+
+#version: 2
+#jobs:
+#  build:
+#    docker:
+#      - image: docker:stable
+#    steps:
+#      - run:
+#          command: echo "here goes your build steps"
+#
+#  tests:
+#    docker:
+#      - image: docker:stable
+#    steps:
+#      - run:
+#          command: echo "here goes your tests steps"
+#
+#workflows:
+#  version: 2
+#  build-test-deploy:
+#    jobs:
+#      - build
+#      - tests:
+#          requires:
+#            - build

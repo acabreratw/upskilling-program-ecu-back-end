@@ -19,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   auth0:
     audience: ${AUTH0_AUDIENCE}
     issuer-uri: ${AUTH0_ISSUER_URI}
@@ -59,10 +59,11 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   auth0:
     audience: ${AUTH0_AUDIENCE}
     issuer-uri: ${AUTH0_ISSUER_URI}
+    custom-token-key: https://upskilling.com
 
 ---
 spring:
