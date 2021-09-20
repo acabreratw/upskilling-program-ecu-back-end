@@ -25,8 +25,9 @@ workflows:
           cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-ecs-fargate"
           container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,tag=latest"
           container-env-var-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_AUDIENCE,value=${AUTH0_AUDIENCE},
-          name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},
-          name=PROFILE,value=${PROFILE}"
+          container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},
+          container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},
+          container=${AWS_RESOURCE_NAME_PREFIX}-container,name=PROFILE,value=${PROFILE}"
 
 #version: 2
 #jobs:
