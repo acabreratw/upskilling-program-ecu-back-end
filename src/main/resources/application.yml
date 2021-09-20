@@ -20,6 +20,9 @@ spring:
     dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create
+    show-sql: true
+    generate-ddl: true
+
   auth0:
     audience: ${AUTH0_AUDIENCE}
     issuer-uri: ${AUTH0_ISSUER_URI}
