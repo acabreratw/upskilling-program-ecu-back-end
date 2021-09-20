@@ -19,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
   auth0:
     audience: ${AUTH0_AUDIENCE}
     issuer-uri: ${AUTH0_ISSUER_URI}
