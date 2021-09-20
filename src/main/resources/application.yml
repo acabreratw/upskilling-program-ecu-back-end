@@ -1,11 +1,4 @@
 spring:
-  profiles:
-    active: local
-server:
-  port: 3000
-
----
-spring:
   profiles: local
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -21,13 +14,13 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
-    generate-ddl: true
 
   auth0:
     audience: ${AUTH0_AUDIENCE}
     issuer-uri: ${AUTH0_ISSUER_URI}
     custom-token-key: https://upskilling.com
-
+server:
+  port: 3000
 ---
 spring:
   profiles: test
