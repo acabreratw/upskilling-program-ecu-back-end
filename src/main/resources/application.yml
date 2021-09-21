@@ -1,4 +1,11 @@
 spring:
+  profiles:
+    active: local
+server:
+  port: 3000
+
+---
+spring:
   profiles: local
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
@@ -12,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
   auth0:

@@ -27,7 +27,6 @@ workflows:
           container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,tag=${CIRCLE_SHA1}"
           container-env-var-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_AUDIENCE,value=${AUTH0_AUDIENCE},
           container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},
-          container=${AWS_RESOURCE_NAME_PREFIX}-container,name=AUTH0_ISSUER_URI,value=${AUTH0_ISSUER_URI},
           container=${AWS_RESOURCE_NAME_PREFIX}-container,name=PROFILE,value=${PROFILE}"
 
 #version: 2
