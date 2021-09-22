@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.3.0.RELEASE'
+        springBootVersion = '2.5.4'
     }
     repositories {
         mavenCentral()
@@ -11,9 +11,9 @@ buildscript {
 }
 
 plugins {
-    id 'org.springframework.boot' version '2.3.0.RELEASE'
+    id 'org.springframework.boot' version '2.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id "org.owasp.dependencycheck" version "5.2.4"
+    id "org.owasp.dependencycheck" version "6.3.1"
     id 'jacoco'
     id 'java'
 }
@@ -36,7 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.apache.commons:commons-lang3'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.3.1.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor('org.projectlombok:lombok:1.18.20')
