@@ -10,7 +10,7 @@ jar:
 	@ $(gradle) build
 
 test:
-	@ $(gradle) test
+	@ $(gradle) clean test
 
 it:
 	@ $(gradle) test -Dtest.profile=integration
