@@ -3,10 +3,8 @@ package com.thoughtworks.lpe.be_template.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
-import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.services.CourseService;
-import com.thoughtworks.lpe.be_template.util.UserData;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +14,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/course")
+@RequiredArgsConstructor
 public class CourseController {
 
-    @Autowired
-    private CourseService courseService;
-
-    @Autowired
-    private CourseMapper courseMapper;
-
-    @Autowired
-    private UserData userData;
+    private final CourseService courseService;
 
     @PostMapping
     public ResponseEntity<String> saveCourse(@RequestBody CourseDto courseDto) {
@@ -69,4 +61,9 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getCourseDetails(courseId, token));
     }
 
+    @PostMapping("/course-enroll/{courseId}")
+    public ResponseEntity<Object> enrollCourse(@RequestHeader("Authorization") String token,
+                                               @PathVariable("courseId") Integer courseId) {
+        return ResponseEntity.ok(courseService.enrollCourse(token, courseId));
+    }
 }

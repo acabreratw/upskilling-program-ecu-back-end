@@ -176,4 +176,8 @@ public class CourseService {
             }
         }
     }
+
+    public Object enrollCourse(String token, Integer courseId) {
+        return null;
+    }
 }
