@@ -20,7 +20,7 @@ you need to have in consideration some things:
 >  `export AUTH0_ISSUER_URI=https://dev-beach-upskilling.us.auth0.com/`
 
 * run the database locally:
-> `docker-compose -f docker-compose-db-local.yml up 
+> `docker-compose -f docker-compose-db-local.yml up` 
 
 *  execute the migrations in database :
 
