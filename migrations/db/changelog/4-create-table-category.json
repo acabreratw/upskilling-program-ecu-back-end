@@ -1,0 +1,22 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "create-category-table",
+        "author": "all",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "category",
+              "columns": [
+                { "column": { "name": "id", "type": "INTEGER", "autoIncrement": "true",
+                  "constraints": { "nullable": false, "primaryKey": true } } },
+                { "column": { "name": "category_name", "type": "varchar(40)", "constraints": { "nullable": false } } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

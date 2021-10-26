@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/2-create-user-course-table.json
   - include:
       file: db/changelog/3-insert-records-into-user-course-table.yml
+  - include:
+      file: db/changelog/4-create-table-category.json
