@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/3-insert-records-into-user-course-table.yml
   - include:
       file: db/changelog/4-create-table-category.json
+  - include:
+      file: db/changelog/5-create-foreignKey-category.yml
