@@ -28,16 +28,13 @@ public class CourseControllerTest {
         final String token = "";
         final Integer courseId = 0;
 
-        when(courseService.enrollCourse(token, courseId))
-                .thenReturn(null);
+        doNothing().when(courseService).enrollCourse(token, courseId);
 
-        ResponseEntity<Object> objectResponseEntity = courseController.enrollCourse(token, courseId);
-        assertNull(objectResponseEntity.getBody());
+        ResponseEntity<Void> objectResponseEntity = courseController.enrollCourse(token, courseId);
         assertEquals(HttpStatus.OK, objectResponseEntity.getStatusCode());
 
         verify(courseService).enrollCourse(same(token), same(courseId));
 
         verifyNoMoreInteractions(courseService);
-
     }
 }

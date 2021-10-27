@@ -62,8 +62,9 @@ public class CourseController {
     }
 
     @PostMapping("/course-enroll/{courseId}")
-    public ResponseEntity<Object> enrollCourse(@RequestHeader("Authorization") String token,
+    public ResponseEntity<Void> enrollCourse(@RequestHeader("Authorization") String token,
                                                @PathVariable("courseId") Integer courseId) {
-        return ResponseEntity.ok(courseService.enrollCourse(token, courseId));
+        courseService.enrollCourse(token, courseId);
+        return ResponseEntity.ok().build();
     }
 }

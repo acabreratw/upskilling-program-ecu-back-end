@@ -10,6 +10,7 @@ import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
+import com.thoughtworks.lpe.be_template.mappers.TraineeUserCourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
@@ -20,6 +21,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -29,10 +31,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CourseServiceTest {
+
+    private static final String USER_ID = "userId";
 
     @Mock
     private CourseRepository courseRepository;
@@ -49,6 +55,9 @@ public class CourseServiceTest {
     @Mock
     private ResourceRepository resourceRepository;
 
+    @Mock
+    private TraineeUserCourseMapper traineeUserCourseMapper;
+
     @InjectMocks
     private final CourseService courseService = new CourseService();
 
@@ -59,6 +68,27 @@ public class CourseServiceTest {
     private final LocalDateTime courseStartDate = LocalDateTime.now().plusDays(3);
     private final LocalDateTime courseEndDate = LocalDateTime.now().plusDays(33);
     private String userId = "1298428321231";
+
+    @Captor
+    private ArgumentCaptor<Integer> courseIdIntegerArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> tokenArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> payloadArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> userIdArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<User> userArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Course> courseArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<TraineeUserCourse> traineeUserCourseArgumentCaptor;
+
 
     @Test
     public void shouldSaveGivenCourse() {
@@ -430,5 +460,114 @@ public class CourseServiceTest {
         verify(userRepository).findById(anyString());
         verify(traineeUserCourseRepository).existsById(any(TraineeUserCourseId.class));
         verify(resourceRepository).findAllByCourseId(anyInt());
+    }
+
+    @Test
+    public void shouldEnrollCourseForTraineeUser() throws JsonProcessingException {
+
+        final String token = "ey.asdf";
+        final int courseId = 123456;
+        final String payloadExpected = "ey.asdf";
+        final String userIdExpected = "user_123456";
+
+        Course courseExpected = buildCourse();
+        when(courseRepository.findById(courseId))
+                .thenReturn(Optional.of(courseExpected));
+
+        when(decoder.getTokenPayload(token))
+                .thenReturn(payloadExpected);
+
+        when(decoder.getCustomPropertyFromToken(payloadExpected, USER_ID))
+                .thenReturn(userIdExpected);
+
+        User userExpected = buildUser();
+        when(userRepository.findById(userIdExpected))
+                .thenReturn(Optional.of(userExpected));
+
+        TraineeUserCourse traineeUserCourseExpected = buildTraineeUserCourse(courseExpected, userExpected);
+        when(traineeUserCourseMapper.convert(courseExpected, userExpected))
+                .thenReturn(traineeUserCourseExpected);
+
+        when(traineeUserCourseRepository.save(traineeUserCourseExpected))
+                .thenReturn(traineeUserCourseExpected);
+
+        courseService.enrollCourse(token, courseId);
+
+        verify(courseRepository).findById(courseIdIntegerArgumentCaptor.capture());
+        assertEquals(courseId, courseIdIntegerArgumentCaptor.getValue());
+
+        verify(decoder).getTokenPayload(tokenArgumentCaptor.capture());
+        assertEquals(token, tokenArgumentCaptor.getValue());
+
+        verify(decoder).getCustomPropertyFromToken(
+                payloadArgumentCaptor.capture(), same(USER_ID));
+        assertEquals(payloadExpected, payloadArgumentCaptor.getValue());
+
+        verify(userRepository).findById(userIdArgumentCaptor.capture());
+        assertEquals(userIdExpected, userIdArgumentCaptor.getValue());
+
+        verify(traineeUserCourseMapper).convert(
+                courseArgumentCaptor.capture(), userArgumentCaptor.capture());
+        assertEquals(courseExpected, courseArgumentCaptor.getValue());
+        assertEquals(userExpected, userArgumentCaptor.getValue());
+
+        verify(traineeUserCourseRepository).save(
+                traineeUserCourseArgumentCaptor.capture());
+        assertEquals(traineeUserCourseExpected, traineeUserCourseArgumentCaptor.getValue());
+
+        verifyNoMoreInteractions(courseRepository, decoder, userRepository, traineeUserCourseRepository, traineeUserCourseMapper);
+        verifyNoInteractions(resourceRepository);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenGetCustomPropertyFromTokenThrowsException() throws JsonProcessingException {
+        final String token = "ey.asdf";
+        final int courseId = 123456;
+        final String payloadExpected = "ey.asdf";
+        final String userIdExpected = "user_123456";
+
+        Course courseExpected = buildCourse();
+        when(courseRepository.findById(courseId))
+                .thenReturn(Optional.of(courseExpected));
+
+        when(decoder.getTokenPayload(token))
+                .thenReturn(payloadExpected);
+
+        when(decoder.getCustomPropertyFromToken(payloadExpected, USER_ID))
+                .thenThrow(JsonProcessingException.class);
+
+        assertThrows(LogicBusinessException.class,
+                () -> courseService.enrollCourse(token, courseId),
+                "Not known field value in token");
+
+        verify(courseRepository).findById(courseIdIntegerArgumentCaptor.capture());
+        assertEquals(courseId, courseIdIntegerArgumentCaptor.getValue());
+
+        verify(decoder).getTokenPayload(tokenArgumentCaptor.capture());
+        assertEquals(token, tokenArgumentCaptor.getValue());
+
+        verify(decoder).getCustomPropertyFromToken(
+                payloadArgumentCaptor.capture(), same(USER_ID));
+        assertEquals(payloadExpected, payloadArgumentCaptor.getValue());
+
+        verifyNoMoreInteractions(courseRepository, decoder);
+        verifyNoInteractions(userRepository, traineeUserCourseMapper, traineeUserCourseRepository);
+    }
+
+    private TraineeUserCourse buildTraineeUserCourse(Course course, User user) {
+        return TraineeUserCourse.builder()
+                .pKey(TraineeUserCourseId.builder()
+                        .traineeUser(user)
+                        .course(course)
+                        .build())
+                .build();
+    }
+
+    private Course buildCourse() {
+        return Course.builder().build();
+    }
+
+    private User buildUser() {
+        return User.builder().build();
     }
 }

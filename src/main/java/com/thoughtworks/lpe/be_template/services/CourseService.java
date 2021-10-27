@@ -1,10 +1,7 @@
 package com.thoughtworks.lpe.be_template.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.thoughtworks.lpe.be_template.domains.Course;
-import com.thoughtworks.lpe.be_template.domains.Resource;
-import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
-import com.thoughtworks.lpe.be_template.domains.User;
+import com.thoughtworks.lpe.be_template.domains.*;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
@@ -12,6 +9,7 @@ import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
+import com.thoughtworks.lpe.be_template.mappers.TraineeUserCourseMapper;
 import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
 import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
 import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
@@ -26,11 +24,12 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.INVALID_COURSE_ID;
-import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.USER_NOT_FOUND;
+import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.*;
 
 @Service
 public class CourseService {
+
+    private static final String USER_ID = "userId";
 
     @Autowired
     private CourseRepository courseRepository;
@@ -46,6 +45,9 @@ public class CourseService {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
+    @Autowired
+    private TraineeUserCourseMapper traineeUserCourseMapper;
 
     public void saveCourse(CourseDto courseDto) {
         courseRepository.save(CourseMapper.dtoToDomain(courseDto));
@@ -177,7 +179,30 @@ public class CourseService {
         }
     }
 
-    public Object enrollCourse(String token, Integer courseId) {
-        return null;
+    public void enrollCourse(String token, Integer courseId) {
+        Course course = getCourse(courseId);
+        User user = getUser(token);
+        TraineeUserCourse traineeUserCourse = traineeUserCourseMapper.convert(course, user);
+
+        traineeUserCourseRepository.save(traineeUserCourse);
+    }
+
+    private Course getCourse(int courseId) {
+        return courseRepository.findById(courseId)
+                .orElseThrow(() -> new LogicBusinessException(INVALID_COURSE_ID));
+    }
+
+    private User getUser(String token) {
+
+        String payload = decoder.getTokenPayload(token);
+        String userId;
+        try {
+            userId = decoder.getCustomPropertyFromToken(payload, USER_ID);
+        } catch (JsonProcessingException e) {
+            throw new LogicBusinessException(INVALID_FIELD_TOKEN);
+        }
+
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new LogicBusinessException(USER_NOT_FOUND));
     }
 }

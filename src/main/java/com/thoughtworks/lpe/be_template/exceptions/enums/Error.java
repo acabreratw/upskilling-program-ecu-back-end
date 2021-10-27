@@ -5,7 +5,8 @@ public enum Error {
     SQL_SYNTAX_ERROR_EXCEPTION("002", "Sql syntax error"),
     INVALID_COURSE_ID("003", "Course id not found into the db", "Course id is invalid"),
     ENTITY_NOT_FOUND("004", "The object to update don't exist"),
-    USER_NOT_FOUND("010", "User id not found into the db.", "User could not be found.");
+    USER_NOT_FOUND("010", "User id not found into the db.", "User could not be found."),
+    INVALID_FIELD_TOKEN("011", "Not known field value in token", "Invalid search in token field");
 
     private final String code;
     private final String developerMessage;
