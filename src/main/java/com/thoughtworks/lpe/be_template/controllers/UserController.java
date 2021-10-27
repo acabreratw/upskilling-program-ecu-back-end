@@ -1,9 +1,8 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
-import com.thoughtworks.lpe.be_template.domains.ApplicationUser;
-import com.thoughtworks.lpe.be_template.repositories.ApplicationUserRepository;
+import com.thoughtworks.lpe.be_template.domains.User;
+import com.thoughtworks.lpe.be_template.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private ApplicationUserRepository applicationUserRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private UserService userService;
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody ApplicationUser user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        applicationUserRepository.save(user);
+    public void signUp(@RequestBody User user) {
+        userService.save(user);
     }
 }
