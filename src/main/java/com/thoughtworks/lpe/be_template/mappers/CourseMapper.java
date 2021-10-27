@@ -13,6 +13,7 @@ public class CourseMapper {
                 .id(course.getId())
                 .imageUrl(course.getImageUrl())
                 .name(course.getName())
+                .categoryId(course.getCategoryId())
                 .build();
     }
 
@@ -22,7 +23,8 @@ public class CourseMapper {
                 .description(courseDto.getDescription())
                 .imageUrl(courseDto.getImageUrl())
                 .freeStartDate(courseDto.getFreeStartDate())
-                .freeEndDate(courseDto.getFreeEndDate()).build();
+                .freeEndDate(courseDto.getFreeEndDate())
+                .categoryId(courseDto.getCategoryId()).build();
     }
 
 }

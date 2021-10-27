@@ -232,41 +232,41 @@ public class CourseControllerIT {
     private List<CourseDto> mockFindOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(8,"Course 8th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,2),
                 new CourseDto(9,"Course 9th", "Description",
-                        "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime,3));
     }
 
     private List<CourseDto> mockFindAllCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(3, "Course 3th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,3),
                 new CourseDto(4, "Course 4th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,4),
                 new CourseDto(6, "Course 6th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new CourseDto(7, "Course 7th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new CourseDto(8, "Course 8th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,2),
                 new CourseDto(9, "Course 9th", "Description",
-                        "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime,3));
     }
 
     private List<CourseDto> mockFindAllOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(3, "Course 3th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,3),
                 new CourseDto(4, "Course 4th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,4),
                 new CourseDto(6, "Course 6th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new CourseDto(7, "Course 7th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new CourseDto(8, "Course 8th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,2),
                 new CourseDto(9, "Course 9th", "Description",
-                        "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime,3));
     }
 
     @Test

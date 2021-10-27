@@ -86,13 +86,14 @@ public class CourseMapperTest {
     public void shouldReturnCourseFromGivenCourseDto() {
         LocalDateTime date = LocalDateTime.now();
         CourseDto courseDto = new CourseDto(1,"Test course", "Description",
-                "url", date, date);
+                "url", date, date,1);
         CourseDto expectedCourseDto = CourseDto.builder().description("Description")
                 .freeEndDate(date)
                 .freeStartDate(date)
                 .imageUrl("url")
                 .name("Test course")
                 .id(1)
+                .categoryId(1)
                 .build();
 
         Course course = CourseMapper.dtoToDomain(courseDto);

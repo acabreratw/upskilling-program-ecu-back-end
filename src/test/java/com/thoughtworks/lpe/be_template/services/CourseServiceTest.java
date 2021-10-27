@@ -100,10 +100,11 @@ public class CourseServiceTest {
                 .freeStartDate(date)
                 .imageUrl("url")
                 .name("Test course")
+                .categoryId(1)
                 .build();
 
         Course expectedCourse = new Course(1,"Test course", "Description",
-                "url", date, date);
+                "url", date, date, 1);
 
         courseService.saveCourse(courseDto);
 
@@ -130,11 +131,11 @@ public class CourseServiceTest {
         String userId = "aedkhdahw232";
         LocalDateTime dateTime = LocalDateTime.now();
         CourseDto expectedCourseDto7Th = CourseDto.builder().id(7).name("Course 7th").description("Description")
-                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").categoryId(1).build();
         CourseDto expectedCourseDto8Th = CourseDto.builder().id(8).name("Course 8th").description("Description")
-                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").categoryId(2).build();
         CourseDto expectedCourseDto9Th = CourseDto.builder().id(9).name("Course 9th").description("Description")
-                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").build();
+                .freeStartDate(dateTime).freeEndDate(dateTime).imageUrl("Image url").categoryId(3).build();
 
         when(courseRepository.findAll()).thenReturn(mockFindAllCourses(dateTime));
         when(traineeUserCourseRepository.findAllByUserIdAndStatusIn(userId, Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED)))
@@ -212,25 +213,25 @@ public class CourseServiceTest {
 
     private List<Course> mockFindAllCourses(LocalDateTime dateTime){
         return Arrays.asList(new Course(1,"Course 1th", "Description",
-                "Image url", dateTime, dateTime),
+                "Image url", dateTime, dateTime,1),
                 new Course(2,"Course 2th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime,2),
                 new Course(3,"Course 3th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,3),
                 new Course(4,"Course 4th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime,4),
                 new Course(5,"Course 5th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new Course(6,"Course 6th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new Course(7,"Course 7th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,1),
                 new Course(8,"Course 8th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime,2),
                 new Course(9,"Course 9th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime,3),
                 new Course(10,"Course 10th", "Description",
-                        "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime,3));
     }
 
     private List<TraineeUserCourse> mockFindAllByStatusIn(){
@@ -254,13 +255,14 @@ public class CourseServiceTest {
     public void shouldReturnTheCourseDetailsGivenAnCourseId(){
         LocalDateTime date = LocalDateTime.now();
         Course course = new Course(1,"Course 1th", "Description",
-                "Image url", date, date);
+                "Image url", date, date, 1);
         CourseDto expectedCourseDto = CourseDto.builder().description("Description")
                 .freeEndDate(date)
                 .freeStartDate(date)
                 .imageUrl("Image url")
                 .name("Course 1th")
                 .id(1)
+                .categoryId(1)
                 .build();
         when(courseRepository.findById(1)).thenReturn(Optional.of(course));
 
@@ -573,5 +575,19 @@ public class CourseServiceTest {
 
     private User buildUser() {
         return User.builder().build();
+    }
+    @Test
+    public void shouldReturnCoursesOfACategory(){
+        LocalDateTime date = LocalDateTime.now();
+        int category_id = 1;
+        List<Course> expectedCourseList = new ArrayList<Course>();
+        List<Course>  AllCourses = mockFindAllCourses(date);
+
+        for (int i=0;i<AllCourses.size();i++){
+            if (AllCourses.get(i).getCategoryId()==category_id){
+                expectedCourseList.add(AllCourses.get(i));
+            }
+        }
+        assertThat(expectedCourseList.size()).isEqualTo(4);
     }
 }

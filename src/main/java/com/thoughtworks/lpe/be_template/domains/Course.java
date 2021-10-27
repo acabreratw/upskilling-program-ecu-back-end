@@ -38,12 +38,16 @@ public class Course implements Serializable {
     @Column(name = "free_end_date")
     private LocalDateTime freeEndDate;
 
-    public Course(String name, String description, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
+    @Column(name = "category_id")
+    private int categoryId;
+
+    public Course(String name, String description, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate, int category_id) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         this.freeStartDate = freeStartDate;
         this.freeEndDate = freeEndDate;
+        this.categoryId =category_id;
     }
 
 }
