@@ -1,8 +1,8 @@
 package com.thoughtworks.lpe.be_template.repositories;
 
+import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
 import com.thoughtworks.lpe.be_template.domains.TraineeUserCourseId;
 import com.thoughtworks.lpe.be_template.domains.enums.CourseStatus;
-import com.thoughtworks.lpe.be_template.domains.TraineeUserCourse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
