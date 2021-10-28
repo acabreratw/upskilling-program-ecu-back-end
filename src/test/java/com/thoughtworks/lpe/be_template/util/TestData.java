@@ -6,6 +6,7 @@ import com.thoughtworks.lpe.be_template.domains.enums.UserType;
 import com.thoughtworks.lpe.be_template.dtos.CourseDetailDto;
 import com.thoughtworks.lpe.be_template.dtos.ResourceDto;
 import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
+import com.thoughtworks.lpe.be_template.dtos.UserDto;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -77,6 +78,15 @@ public class TestData {
 
     public User getUser(UserType userType) {
         return User.builder()
+                .id("1231424231")
+                .email("somemail@somedomain.com")
+                .type(userType)
+                .name("Some Name")
+                .build();
+    }
+
+    public UserDto getUserDto(UserType userType) {
+        return UserDto.builder()
                 .id("1231424231")
                 .email("somemail@somedomain.com")
                 .type(userType)

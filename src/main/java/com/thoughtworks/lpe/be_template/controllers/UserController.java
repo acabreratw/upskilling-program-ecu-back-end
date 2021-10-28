@@ -1,6 +1,6 @@
 package com.thoughtworks.lpe.be_template.controllers;
 
-import com.thoughtworks.lpe.be_template.domains.User;
+import com.thoughtworks.lpe.be_template.dtos.UserDto;
 import com.thoughtworks.lpe.be_template.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody User user) {
-        userService.save(user);
+    public void signUp(@RequestBody UserDto userDto) {
+        userService.save(userDto);
     }
 }
