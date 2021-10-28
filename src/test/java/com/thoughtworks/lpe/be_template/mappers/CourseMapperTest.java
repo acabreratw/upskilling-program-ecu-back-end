@@ -87,16 +87,17 @@ public class CourseMapperTest {
         LocalDateTime date = LocalDateTime.now();
         CourseDto courseDto = new CourseDto(1,"Test course", "Description",
                 "url", date, date);
-        CourseDto expectedCourseDto = CourseDto.builder().description("Description")
+        Course expectedCourse = Course.builder().id(1)
+                .description("Description")
                 .freeEndDate(date)
                 .freeStartDate(date)
                 .imageUrl("url")
                 .name("Test course")
-                .id(1)
+                .trainer(null)
                 .build();
 
         Course course = CourseMapper.dtoToDomain(courseDto);
         course.setId(1);
-        assertThat(course).isEqualToComparingFieldByField(expectedCourseDto);
+        assertThat(course).isEqualToComparingFieldByField(expectedCourse);
     }
 }

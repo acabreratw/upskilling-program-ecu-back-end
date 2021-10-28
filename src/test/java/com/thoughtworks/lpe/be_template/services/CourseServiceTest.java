@@ -11,10 +11,7 @@ import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.mappers.TraineeUserCourseMapper;
-import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
-import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.UserRepository;
+import com.thoughtworks.lpe.be_template.repositories.*;
 import com.thoughtworks.lpe.be_template.security.TokenDecoder;
 import com.thoughtworks.lpe.be_template.util.TestData;
 import org.junit.Test;
@@ -54,6 +51,9 @@ public class CourseServiceTest {
 
     @Mock
     private ResourceRepository resourceRepository;
+
+    @Mock
+    private TrainerRepository trainerRepository;
 
     @Mock
     private TraineeUserCourseMapper traineeUserCourseMapper;
@@ -102,7 +102,7 @@ public class CourseServiceTest {
                 .build();
 
         Course expectedCourse = new Course(1,"Test course", "Description",
-                "url", date, date);
+                "url", date, date, null);
 
         courseService.saveCourse(courseDto);
 
@@ -210,23 +210,23 @@ public class CourseServiceTest {
 
     private List<Course> mockFindAllCourses(LocalDateTime dateTime){
         return Arrays.asList(new Course(1,"Course 1th", "Description",
-                "Image url", dateTime, dateTime),
+                "Image url", dateTime, dateTime, new Trainer()),
                 new Course(2,"Course 2th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime, new Trainer()),
                 new Course(3,"Course 3th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime, new Trainer()),
                 new Course(4,"Course 4th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime, new Trainer()),
                 new Course(5,"Course 5th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime, new Trainer()),
                 new Course(6,"Course 6th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime, new Trainer()),
                 new Course(7,"Course 7th", "Description",
-                        "Image url", dateTime, dateTime),
+                        "Image url", dateTime, dateTime, new Trainer()),
                 new Course(8,"Course 8th", "Description",
-                         "Image url", dateTime, dateTime),
+                         "Image url", dateTime, dateTime, new Trainer()),
                 new Course(9,"Course 9th", "Description",
-                        "Image url", dateTime, dateTime));
+                        "Image url", dateTime, dateTime, new Trainer()));
     }
 
     private List<TraineeUserCourse> mockFindAllByStatusIn(){
@@ -250,7 +250,7 @@ public class CourseServiceTest {
     public void shouldReturnTheCourseDetailsGivenAnCourseId(){
         LocalDateTime date = LocalDateTime.now();
         Course course = new Course(1,"Course 1th", "Description",
-                "Image url", date, date);
+                "Image url", date, date, new Trainer());
         CourseDto expectedCourseDto = CourseDto.builder().description("Description")
                 .freeEndDate(date)
                 .freeStartDate(date)
