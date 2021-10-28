@@ -6,7 +6,8 @@ public enum Error {
     INVALID_COURSE_ID("003", "Course id not found into the db", "Course id is invalid"),
     ENTITY_NOT_FOUND("004", "The object to update don't exist"),
     USER_NOT_FOUND("010", "User id not found into the db.", "User could not be found."),
-    INVALID_FIELD_TOKEN("011", "Not known field value in token", "Invalid search in token field");
+    INVALID_FIELD_TOKEN("011", "Not known field value in token", "Invalid search in token field"),
+    DUPLICATED_ENROLL_COURSE_USER("012", "Duplicated user in enroll course process", "The user is already enrolled to this course");
 
     private final String code;
     private final String developerMessage;

@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static com.thoughtworks.lpe.be_template.domains.enums.CourseStatus.*;
 import static com.thoughtworks.lpe.be_template.exceptions.enums.Error.*;
 
 @Service
@@ -61,7 +62,7 @@ public class CourseService {
 
     public List<CourseDto> findOpenedCourses(String userEmail, int page, int limit) {
         return courseRepository.findAll().stream()
-                .filter(isAnOpenedCourseForTheUser(userEmail))
+                .filter(isAnOpenedCourseForTheUser(userEmail, Arrays.asList(IN_PROGRESS, PASSED)).negate())
                 .map(CourseMapper::domainToDto)
                 .skip((long) page *limit).limit(limit)
                 .collect(Collectors.toList());
@@ -83,9 +84,8 @@ public class CourseService {
                 .orElseThrow(this::throwLogicBusinessExceptionBecauseOfInvalidCourseId);
     }
 
-    private Predicate<Course> isAnOpenedCourseForTheUser(String userEmail) {
-        List<CourseStatus> subscribedCoursesStatuses = Arrays.asList(CourseStatus.IN_PROGRESS, CourseStatus.PASSED);
-        return courseDto -> !traineeUserCourseRepository.findAllByUserIdAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
+    private Predicate<Course> isAnOpenedCourseForTheUser(String userEmail, List<CourseStatus> subscribedCoursesStatuses) {
+        return courseDto -> traineeUserCourseRepository.findAllByUserIdAndStatusIn(userEmail, subscribedCoursesStatuses).stream()
                 .map(traineeUserCourse -> traineeUserCourse.getPKey().getCourse().getId())
                 .collect(Collectors.toList())
                 .contains(courseDto.getId());
@@ -169,7 +169,7 @@ public class CourseService {
         boolean isInProgress = currentDateTime.isAfter(startDate) && (currentDateTime.isEqual(endDate) || currentDateTime.isBefore(endDate));
 
         if (isOpen) {
-            return CourseStatus.OPEN.name();
+            return OPEN.name();
         } else {
             if (isInProgress) {
                 return CourseStatus.IN_PROGRESS.name();
@@ -182,6 +182,15 @@ public class CourseService {
     public void enrollCourse(String token, Integer courseId) {
         Course course = getCourse(courseId);
         User user = getUser(token);
+
+        boolean isAnOpenedCourseForTheUser =
+                isAnOpenedCourseForTheUser(user.getId(), List.of(IN_PROGRESS, PASSED, FAILED, EXPIRED, OPEN, CLOSED))
+                        .test(course);
+
+        if(isAnOpenedCourseForTheUser) {
+            throw new LogicBusinessException(DUPLICATED_ENROLL_COURSE_USER);
+        }
+
         TraineeUserCourse traineeUserCourse = traineeUserCourseMapper.convert(course, user);
 
         traineeUserCourseRepository.save(traineeUserCourse);
