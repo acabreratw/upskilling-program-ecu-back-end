@@ -10,10 +10,7 @@ import com.thoughtworks.lpe.be_template.dtos.TrainerDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.mappers.CourseMapper;
 import com.thoughtworks.lpe.be_template.mappers.TraineeUserCourseMapper;
-import com.thoughtworks.lpe.be_template.repositories.CourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.ResourceRepository;
-import com.thoughtworks.lpe.be_template.repositories.TraineeUserCourseRepository;
-import com.thoughtworks.lpe.be_template.repositories.UserRepository;
+import com.thoughtworks.lpe.be_template.repositories.*;
 import com.thoughtworks.lpe.be_template.security.TokenDecoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +43,9 @@ public class CourseService {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
+    @Autowired
+    private TrainerRepository trainerRepository;
 
     @Autowired
     private TraineeUserCourseMapper traineeUserCourseMapper;
@@ -105,7 +105,9 @@ public class CourseService {
         Course actualCourse = optionalCourse.get();
 
         String payload = decoder.getTokenPayload(accessToken);
-        String userId = decoder.getCustomPropertyFromToken(payload, "userId");
+
+
+         String userId = decoder.getCustomPropertyFromToken(payload, "userId");
         Optional<User> optionalTraineeUser = userRepository.findById(userId);
 
         if (optionalTraineeUser.isEmpty()) {
@@ -122,13 +124,6 @@ public class CourseService {
                 .build();
 
         boolean isUserAlreadyEnrolled = traineeUserCourseRepository.existsById(lookupComposeId);
-
-        //TODO: This section should be replaced with a proper query in next sprints when Trainer's stories get into the scope
-        final String FAKE_TRAINER_ID = "Mock_trainer_id";
-        final String FAKE_TRAINER_DESCRIPTION = "Best educator in the world. Won Nobel prize of Education in 2021";
-        final String FAKE_TRAINER_NAME = "Mary Lee";
-        final String FAKE_TRAINER_TITLE = "Best of the Best";
-        final String FAKE_TRAINER_IMAGE = "https://media.istockphoto.com/photos/portrait-of-smiling-professor-in-the-amphitheater-picture-id1128666909?k=6&m=1128666909&s=612x612&w=0&h=gwBz0Hi_DIhpcwrX64agp-iYbGGehPpRfuw6KnsRU8s=";
 
         Set<ResourceDto> resources = new HashSet<>();
         Set<Resource> resourcesFound= resourceRepository.findAllByCourseId(courseId);
@@ -150,11 +145,11 @@ public class CourseService {
                 .description(actualCourse.getDescription())
                 .resources(resources)
                 .trainer(TrainerDto.builder()
-                        .id(FAKE_TRAINER_ID)
-                        .name(FAKE_TRAINER_NAME)
-                        .description(FAKE_TRAINER_DESCRIPTION)
-                        .title(FAKE_TRAINER_TITLE)
-                        .image(FAKE_TRAINER_IMAGE)
+                        .id(actualCourse.getTrainer().getId().toString())
+                        .name(actualCourse.getTrainer().getName())
+                        .description(actualCourse.getTrainer().getDescription())
+                        .title(actualCourse.getTrainer().getDegree())
+                        .image(actualCourse.getTrainer().getImage())
                         .build())
                 .status(courseStatus)
                 .enrolled(isUserAlreadyEnrolled)

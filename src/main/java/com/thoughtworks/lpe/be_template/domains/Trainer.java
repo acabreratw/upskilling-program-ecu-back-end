@@ -38,9 +38,6 @@ public class Trainer {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", name = "course_id",nullable=false)
-    private Course course;
+
 
 }

@@ -1,5 +1,6 @@
 package com.thoughtworks.lpe.be_template.domains;
 
+import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,6 +42,11 @@ public class Course implements Serializable {
     @Column(name = "category_id")
     private int categoryId;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "id", name = "trainer_id", nullable=false)
+    private Trainer trainer;
+
     public Course(String name, String description, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate, int category_id) {
         this.name = name;
         this.description = description;
@@ -49,5 +55,6 @@ public class Course implements Serializable {
         this.freeEndDate = freeEndDate;
         this.categoryId =category_id;
     }
+
 
 }
