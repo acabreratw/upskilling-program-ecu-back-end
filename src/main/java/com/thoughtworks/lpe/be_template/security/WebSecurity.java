@@ -46,6 +46,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter implements WebMvcC
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .mvcMatchers(SIGN_UP_URL, "/actuator/**").permitAll()
+                .mvcMatchers("/api/v1/course", "/**").permitAll()
                 .mvcMatchers("/**").authenticated()
                 .and()
                 .cors()

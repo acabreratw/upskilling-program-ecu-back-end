@@ -22,7 +22,6 @@ public class TokenInterceptor implements HandlerInterceptor {
             throws Exception {
 
         String token = tokenDecoder.getTokenPayload(request.getHeader("Authorization"));
-
         userData.setId(tokenDecoder.getCustomPropertyFromToken(token, "userId"));
         userData.setEmail(tokenDecoder.getCustomPropertyFromToken(token, "email"));
         userData.setFullName(tokenDecoder.getCustomPropertyFromToken(token, "name"));

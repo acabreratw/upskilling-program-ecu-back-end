@@ -17,14 +17,12 @@ public class TokenDecoder {
         String[] chunks = accessToken.split("\\.");
 
         Base64.Decoder decoder = Base64.getDecoder();
-
         return new String(decoder.decode(chunks[1]));
     }
 
     public String getCustomPropertyFromToken(String tokenPayload, String customPropertyToGet) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> object = objectMapper.readValue(tokenPayload, Map.class);
-
         return object.get(customTokenKey+ "/" +customPropertyToGet);
     }
 }

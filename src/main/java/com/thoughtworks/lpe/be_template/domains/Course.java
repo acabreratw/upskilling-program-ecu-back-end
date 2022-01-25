@@ -40,7 +40,7 @@ public class Course implements Serializable {
     private LocalDateTime freeEndDate;
 
     @Column(name = "category_id")
-    private int categoryId;
+    private Integer categoryId;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

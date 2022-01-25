@@ -16,5 +16,5 @@ public class CourseDto {
     private String imageUrl;
     private LocalDateTime freeStartDate;
     private LocalDateTime freeEndDate;
-    private int categoryId;
+    private Integer categoryId;
 }

@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Set;
 
 public interface TrainerRepository extends JpaRepository<Trainer, Integer> {
-    Trainer findByCourseId(Integer courseId);
 }
