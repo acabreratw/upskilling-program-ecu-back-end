@@ -97,7 +97,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter implements WebMvcC
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor);
+        //registry.addInterceptor(tokenInterceptor);
     }
 
     @Bean
