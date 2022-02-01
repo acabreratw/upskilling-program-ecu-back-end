@@ -17,4 +17,5 @@ public class CourseDto {
     private LocalDateTime freeStartDate;
     private LocalDateTime freeEndDate;
     private Integer categoryId;
+    private Integer trainerId;
 }

@@ -14,6 +14,7 @@ public class CourseMapper {
                 .imageUrl(course.getImageUrl())
                 .name(course.getName())
                 .categoryId(course.getCategoryId())
+                .trainerId(course.getTrainer().getId())
                 .build();
     }
 
