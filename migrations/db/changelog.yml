@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/4-create-table-category.json
   - include:
       file: db/changelog/5-create-foreignKey-category.yml
+  - include:
+      file: db/changelog/6-add-column-to-resource-table.yml
