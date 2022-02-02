@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.thoughtworks.lpe.be_template.controllers.resources.ErrorResponse;
+import com.thoughtworks.lpe.be_template.domains.Category;
 import com.thoughtworks.lpe.be_template.domains.Course;
+import com.thoughtworks.lpe.be_template.domains.Trainer;
 import com.thoughtworks.lpe.be_template.dtos.CourseDto;
 import com.thoughtworks.lpe.be_template.exceptions.LogicBusinessException;
 import com.thoughtworks.lpe.be_template.exceptions.enums.Error;
@@ -66,6 +68,8 @@ public class CourseControllerIT {
                 .freeStartDate(LocalDateTime.parse(dateString))
                 .imageUrl("url")
                 .name("Test course")
+                .trainerName("Trainer1")
+                .categoryName("Category1")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
@@ -75,6 +79,8 @@ public class CourseControllerIT {
                 .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .imageUrl("url")
                 .name("Test course")
+                .trainerName("Trainer1")
+                .categoryName("Category1")
                 .build();
 
         RequestBuilder requestBuilder = post("/api/v1/course")
@@ -165,15 +171,27 @@ public class CourseControllerIT {
                 .freeStartDate(startDateTime)
                 .imageUrl("url")
                 .name("Test course")
+                .trainerName("Trainer1")
+                .categoryName("Category1")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
+
+        Trainer expectedTrainer = Trainer.builder()
+                .name("Trainer1")
+                .build();
+        
+        Category expectedCategory = Category.builder()
+                .name("Category1")
+                .build();
 
         Course expectedCourse = Course.builder().description("Description")
                 .freeEndDate(LocalDateTime.parse(endDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .freeStartDate(LocalDateTime.parse(startDateTime.toString(), DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .imageUrl("url")
                 .name("Test course")
+                .trainer(expectedTrainer)
+                .category(expectedCategory)
                 .build();
 
         RequestBuilder requestBuilder = put("/api/v1/course")
@@ -200,6 +218,8 @@ public class CourseControllerIT {
                 .freeStartDate(LocalDateTime.parse(dateString))
                 .imageUrl("url")
                 .name("Test course")
+                .trainerName("Trainer1")
+                .categoryName("Category1")
                 .build();
 
         String jsonCourse = mapper.writeValueAsString(courseResource);
@@ -209,6 +229,8 @@ public class CourseControllerIT {
                 .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .imageUrl("url")
                 .name("Test course")
+                .trainerName("Trainer1")
+                .categoryName("Category1")
                 .build();
 
         RequestBuilder requestBuilder = put("/api/v1/course")
@@ -232,41 +254,41 @@ public class CourseControllerIT {
     private List<CourseDto> mockFindOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(8,"Course 8th", "Description",
-                        "Image url", dateTime, dateTime,2),
+                        "Image url", dateTime, dateTime, "Trainer", "Category2"),
                 new CourseDto(9,"Course 9th", "Description",
-                        "Image url", dateTime, dateTime,3));
+                        "Image url", dateTime, dateTime, "Trainer", "Category3"));
     }
 
     private List<CourseDto> mockFindAllCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(3, "Course 3th", "Description",
-                        "Image url", dateTime, dateTime,3),
+                        "Image url", dateTime, dateTime, "Trainer", "Category3"),
                 new CourseDto(4, "Course 4th", "Description",
-                        "Image url", dateTime, dateTime,4),
+                        "Image url", dateTime, dateTime, "Trainer", "Category4"),
                 new CourseDto(6, "Course 6th", "Description",
-                        "Image url", dateTime, dateTime,1),
+                        "Image url", dateTime, dateTime, "Trainer", "Category1"),
                 new CourseDto(7, "Course 7th", "Description",
-                        "Image url", dateTime, dateTime,1),
+                        "Image url", dateTime, dateTime, "Trainer", "Category1"),
                 new CourseDto(8, "Course 8th", "Description",
-                        "Image url", dateTime, dateTime,2),
+                        "Image url", dateTime, dateTime, "Trainer", "Category2"),
                 new CourseDto(9, "Course 9th", "Description",
-                        "Image url", dateTime, dateTime,3));
+                        "Image url", dateTime, dateTime, "Trainer", "Category3"));
     }
 
     private List<CourseDto> mockFindAllOpenedCourses(LocalDateTime dateTime){
         return Arrays.asList(
                 new CourseDto(3, "Course 3th", "Description",
-                        "Image url", dateTime, dateTime,3),
+                        "Image url", dateTime, dateTime, "Trainer", "Category3"),
                 new CourseDto(4, "Course 4th", "Description",
-                        "Image url", dateTime, dateTime,4),
+                        "Image url", dateTime, dateTime, "Trainer", "Category4"),
                 new CourseDto(6, "Course 6th", "Description",
-                        "Image url", dateTime, dateTime,1),
+                        "Image url", dateTime, dateTime, "Trainer", "Category1"),
                 new CourseDto(7, "Course 7th", "Description",
-                        "Image url", dateTime, dateTime,1),
+                        "Image url", dateTime, dateTime, "Trainer", "Category1"),
                 new CourseDto(8, "Course 8th", "Description",
-                        "Image url", dateTime, dateTime,2),
+                        "Image url", dateTime, dateTime, "Trainer", "Category2"),
                 new CourseDto(9, "Course 9th", "Description",
-                        "Image url", dateTime, dateTime,3));
+                        "Image url", dateTime, dateTime, "Trainer", "Category3"));
     }
 
     @Test
@@ -274,11 +296,11 @@ public class CourseControllerIT {
         String dateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern(DATETIME_FORMAT));
         CourseDto expectedCourseDto = CourseDto.builder().description("Description")
                 .freeEndDate(LocalDateTime.parse(dateString)).freeStartDate(LocalDateTime.parse(dateString)).imageUrl("Image url")
-                .name("Course 1th").id(1).build();
+                .name("Course 1th").trainerName("Trainer1").categoryName("Category1").build();
         CourseDto courseDto = CourseDto.builder().description("Description")
                 .freeEndDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
                 .freeStartDate(LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(DATETIME_FORMAT)))
-                .imageUrl("Image url").name("Course 1th").id(1).build();
+                .imageUrl("Image url").name("Course 1th").trainerName("Trainer1").categoryName("Category1").build();
         when(courseService.findCourseById(1)).thenReturn(courseDto);
         RequestBuilder requestBuilder = get("/api/v1/course/{id}", String.valueOf(1))
                 .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON);

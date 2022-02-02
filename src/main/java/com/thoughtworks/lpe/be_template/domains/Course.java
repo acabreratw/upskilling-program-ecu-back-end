@@ -39,22 +39,21 @@ public class Course implements Serializable {
     @Column(name = "free_end_date")
     private LocalDateTime freeEndDate;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id", name = "trainer_id", nullable=false)
     private Trainer trainer;
 
-    public Course(String name, String description, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate, int category_id) {
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "id", name = "category_id", nullable=false)
+    private Category category;
+
+    public Course(String name, String description, String imageUrl, LocalDateTime freeStartDate, LocalDateTime freeEndDate) {
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
         this.freeStartDate = freeStartDate;
         this.freeEndDate = freeEndDate;
-        this.categoryId =category_id;
     }
-
-
 }
