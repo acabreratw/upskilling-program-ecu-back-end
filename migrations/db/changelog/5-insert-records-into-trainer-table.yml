@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-records-into-trainer-table
+      author: All
+      changes:
+        - sqlFile:
+            path: db/migrations/5-insert-records-into-trainer-table.sql

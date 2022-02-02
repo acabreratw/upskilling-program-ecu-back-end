@@ -4,4 +4,4 @@ databaseChangeLog:
       author: All
       changes:
         - sqlFile:
-            path: db/migrations/1-insert-records-into-course-table.sql
+            path: db/migrations/6-insert-records-into-course-table.sql

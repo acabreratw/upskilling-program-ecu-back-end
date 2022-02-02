@@ -17,8 +17,20 @@
                 { "column": { "name": "image_url", "type": "varchar(300)", "constraints": { "nullable": false } } },
                 { "column": { "name": "free_start_date", "type": "datetime", "constraints": { "nullable": true } } },
                 { "column": { "name": "free_end_date", "type": "datetime", "constraints": { "nullable": true } } },
+                { "column": { "name": "category_id", "type": "int", "constraints": { "nullable": false } } },
+                { "column": { "name": "trainer_id", "type": "int", "constraints": { "nullable": false } } }
               ]
             }
+          },
+          {
+            "addForeignKeyConstraint": {  "baseColumnNames":  "category_id",  "baseTableName":  "course",
+                                          "constraintName": "fk_course_category", "referencedColumnNames":  "id",
+                                          "referencedTableName":  "category" }
+          },
+          {
+            "addForeignKeyConstraint": {  "baseColumnNames":  "trainer_id",  "baseTableName":  "course",
+                                          "constraintName": "fk_course_trainer", "referencedColumnNames":  "id",
+                                          "referencedTableName":  "trainer" }
           }
         ]
       }

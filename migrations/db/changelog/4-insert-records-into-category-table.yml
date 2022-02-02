@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-records-into-category-table
+      author: All
+      changes:
+        - sqlFile:
+            path: db/migrations/4-insert-records-into-category-table.sql

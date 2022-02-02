@@ -1,0 +1,25 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "create-trainer-table",
+        "author": "all",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "trainer",
+              "columns": [
+                { "column": { "name": "id", "type": "INTEGER", "autoIncrement": "true",
+                  "constraints": { "nullable": false, "primaryKey": true } } },
+                { "column": { "name": "degree", "type": "varchar(255)", "constraints": { "nullable": false } } },
+                { "column": { "name": "description", "type": "varchar(255)", "constraints": { "nullable": false } } },
+                { "column": { "name": "image", "type": "varchar(255)", "constraints": { "nullable": true } } },
+                { "column": { "name": "name", "type": "varchar(255)", "constraints": { "nullable": false } } }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
