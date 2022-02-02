@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: addColumnToResourceTable
+      author: All
+      changes:
+        - addColumn:
+            tableName: resource
+            columns:
+              - column:
+                  name: time_demand_seconds
+                  type: mediumint

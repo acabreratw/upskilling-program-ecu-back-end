@@ -12,4 +12,4 @@ databaseChangeLog:
             onUpdate:  RESTRICT  
             referencedColumnNames:  id  
             referencedTableName:  category  
-            referencedTableSchemaName:  db_greeting  
+            referencedTableSchemaName:  db_greeting
