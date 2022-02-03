@@ -135,6 +135,7 @@ public class CourseService {
                         .title(resource.getTitle())
                         .content(resource.getContent())
                         .id(resource.getId().longValue())
+                        .time_demand(resource.getTime_demand())
                         .build());
             }
         }
@@ -208,5 +209,23 @@ public class CourseService {
 
         return userRepository.findById(userId)
                 .orElseThrow(() -> new LogicBusinessException(USER_NOT_FOUND));
+    }
+
+    public Set<ResourceDto> getCourseResources(int id) {
+        Set<ResourceDto> resources = new HashSet<>();
+        Set<Resource> resourcesFound = resourceRepository.findAllByCourseId(id);
+
+        if (!resourcesFound.isEmpty()) {
+            for (Resource resource : resourcesFound) {
+                resources.add(ResourceDto.builder()
+                        .image(resource.getImage())
+                        .title(resource.getTitle())
+                        .content(resource.getContent())
+                        .id(resource.getId().longValue())
+                        .time_demand(resource.getTime_demand())
+                        .build());
+            }
+        }
+        return resources;
     }
 }

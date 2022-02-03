@@ -37,7 +37,7 @@ public class Resource implements Serializable {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", name = "course_id",nullable=false)
+    @JoinColumn(referencedColumnName = "id", name = "course_id", nullable = false)
     private Course course;
 
     @Column(name = "type", nullable = false)
@@ -47,4 +47,7 @@ public class Resource implements Serializable {
 
     private String image;
 
+    @NotNull
+    @Column(name = "time_demand_seconds", nullable = false)
+    private Integer time_demand;
 }

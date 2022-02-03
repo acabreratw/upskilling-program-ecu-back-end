@@ -12,4 +12,5 @@ public class ResourceDto {
     private String title;
     private String content;
     private String image;
+    private Integer time_demand;
 }
