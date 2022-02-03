@@ -223,6 +223,7 @@ public class CourseService {
                         .content(resource.getContent())
                         .id(resource.getId().longValue())
                         .time_demand(resource.getTime_demand())
+                        .type(resource.getType())
                         .build());
             }
         }

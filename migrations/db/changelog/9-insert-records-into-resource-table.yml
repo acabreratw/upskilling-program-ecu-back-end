@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-records-into-resource-table
+      author: All
+      changes:
+        - sqlFile:
+            path: db/migrations/9-insert-records-into-resource-table.sql

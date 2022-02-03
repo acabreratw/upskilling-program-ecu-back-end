@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/7-insert-records-into-user-course-table.yml
   - include:
       file: db/changelog/8-add-column-to-resource-table.yml
+  - include:
+      file: db/changelog/9-insert-records-into-resource-table.yml
